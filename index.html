@@ -40,11 +40,17 @@
     .cat-tabs::-webkit-scrollbar { display: none; }
     .tab-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 10px; border-radius: 14px; font-size: 11px; white-space: nowrap; cursor: pointer; }
     .tab-btn.active { background: #1d4ed8; color: white; border-color: #2563eb; }
+    
     .btn-add-cat { background: var(--bg-card); border: 1px dashed var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 14px; font-size: 11px; white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
 
-    .search-box { padding: 6px 10px; background: #18120e; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-    .search-box input[type="text"] { flex-grow: 1; min-width: 90px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 12px; outline: none; }
+    .search-box { padding: 6px 10px; background: #18120e; display: flex; flex-direction: column; gap: 6px; }
+    .search-row-1 { display: flex; gap: 6px; align-items: center; width: 100%; }
+    .search-row-1 input[type="text"] { flex-grow: 1; min-width: 90px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 12px; outline: none; }
     
+    .search-row-2 { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 6px; }
+    .swap-group { display: flex; gap: 6px; align-items: center; }
+    .extra-actions-group { display: flex; gap: 6px; align-items: center; }
+
     .btn-batch-actions { background: #26211c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
     .btn-batch-actions.active-batch { background: #8b5cf6; color: white; border-color: #7c3aed; }
 
@@ -146,25 +152,28 @@
                 <div class="cat-tabs" id="catTabsContainer">
                     <div class="tab-btn active" onclick="filtrarCategoria('TODOS', this)">Todos</div>
                 </div>
-                <button class="btn-add-cat" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias" style="border-color: #8b5cf6; color: #8b5cf6;">✏️ Gerenciar</button>
-                <button class="btn-add-cat" onclick="abrirModalNovaCategoria()" title="Adicionar Nova Categoria">➕ Nova</button>
             </div>
         </div>
 
         <div class="search-box">
-            <input type="checkbox" id="selectAllCatCheckbox" onclick="alternarSelecionarTodaCategoria(this.checked)" title="Marcar/Desmarcar todos da categoria atual" class="channel-checkbox">
-            
-            <input type="text" id="searchInput" placeholder="Pesquisar canal..." oninput="renderizarLista()">
-            
-            <button id="btnBatchActions" class="btn-batch-actions" onclick="abrirMenuAcoesLote()">⚙️ (<span id="batchCountNum">0</span>)</button>
-            
-            <button class="btn-batch-actions" onclick="abrirEdicaoRawSelecionados()" title="Edição RAW" style="background:#0369a1; color:white; border-color:#0284c7;">💻 RAW</button>
-            
-            <div id="swapCounterIndicator" style="font-size: 10px; color: var(--text-muted); white-space: nowrap; background: #1e1510; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold;">
-                🔵 <span id="countBlue">0</span> | 🔴 <span id="countRed">0</span>
+            <div class="search-row-1">
+                <input type="checkbox" id="selectAllCatCheckbox" onclick="alternarSelecionarTodaCategoria(this.checked)" title="Marcar/Desmarcar todos da categoria atual" class="channel-checkbox">
+                <input type="text" id="searchInput" placeholder="Pesquisar canal..." oninput="renderizarLista()">
+                <button id="btnBatchActions" class="btn-batch-actions" onclick="abrirMenuAcoesLote()">⚙️ (<span id="batchCountNum">0</span>)</button>
+                <button class="btn-batch-actions" onclick="abrirEdicaoRawSelecionados()" title="Edição RAW" style="background:#0369a1; color:white; border-color:#0284c7;">💻 RAW</button>
             </div>
-
-            <button class="btn-apply-swap" onclick="executarTrocaPosicoes()">Aplicar</button>
+            <div class="search-row-2">
+                <div class="swap-group">
+                    <div id="swapCounterIndicator" style="font-size: 10px; color: var(--text-muted); white-space: nowrap; background: #1e1510; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold;">
+                        🔵 <span id="countBlue">0</span> | 🔴 <span id="countRed">0</span>
+                    </div>
+                    <button class="btn-apply-swap" onclick="executarTrocaPosicoes()">Aplicar</button>
+                </div>
+                <div class="extra-actions-group">
+                    <button class="btn-add-cat" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias" style="border-color: #8b5cf6; color: #8b5cf6;">✏️ Gerenciar</button>
+                    <button class="btn-add-cat" onclick="abrirModalNovaCategoria()" title="Adicionar Nova Categoria">➕ Nova</button>
+                </div>
+            </div>
         </div>
     </div>
 
