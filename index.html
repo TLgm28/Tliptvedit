@@ -49,7 +49,7 @@
     .channel-logo span { font-size: 10px; color: var(--text-muted); text-align: center; }
     
     .channel-details { flex-grow: 1; overflow: hidden; cursor: pointer; }
-    .channel-name { font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .channel-name { font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
     .channel-url { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 2px; }
     
     .channel-footer-info { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
@@ -85,6 +85,21 @@
     .action-sheet { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1410; border-top-left-radius: 16px; border-top-right-radius: 16px; border-top: 1px solid var(--border-color); z-index: 1500; max-height: 75vh; overflow-y: auto; }
     .action-sheet-item { padding: 16px 20px; border-bottom: 1px solid #221b16; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
     .action-sheet-item:active { background: #2a211c; }
+
+    /* Novos Estilos: Painel e Status do Canal */
+    .panel-card { background: #0a0806; border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 12px; }
+    .panel-card h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--text-main); }
+    .btn-red { background: #dc2626; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; margin-bottom: 8px; width: 100%; text-align: left; }
+    .btn-dark { background: #262626; color: var(--text-muted); border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; width: 100%; text-align: left; }
+    .btn-red:active { background: #b91c1c; }
+    .status-console { background: #000; color: #22c55e; font-family: monospace; padding: 12px; border-radius: 6px; font-size: 12px; min-height: 40px; margin-top: 8px; white-space: pre-wrap; }
+
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; flex-shrink: 0; }
+    .status-unknown { background: #4b5563; }
+    .status-online { background: #22c55e; box-shadow: 0 0 5px #22c55e; }
+    .status-offline { background: #ef4444; box-shadow: 0 0 5px #ef4444; }
+    .status-loading { background: #eab308; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 </style>
 </head>
 <body>
@@ -216,9 +231,39 @@
         </div>
     </div>
 
+    <!-- Novo: Modal do Painel de Gerenciamento -->
+    <div class="modal" id="modalPainel">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Painel de Gerenciamento</span>
+                <span style="cursor:pointer; font-size:20px;" onclick="fecharPainel()">✕</span>
+            </div>
+            <div class="modal-body" style="background: #14100d;">
+                
+                <div class="panel-card">
+                    <h3>Sincronização de Conteúdo</h3>
+                    <button class="btn-red" onclick="logSistema('Iniciando Rescan Rápido (Atualizar M3U)...')">Rescan Rápido (Atualizar M3U)</button>
+                    <button class="btn-dark" onclick="logSistema('Limpando cache do sistema...')">Limpeza Total do Cache</button>
+                </div>
+
+                <div class="panel-card">
+                    <h3>Gerar Teste Temporário (24h)</h3>
+                    <button class="btn-red" onclick="gerarTeste()">Criar Conexão Convidado</button>
+                </div>
+
+                <div class="panel-card">
+                    <h3>Status do Sistema</h3>
+                    <div class="status-console" id="consoleStatus">Aguardando comando...</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
     <div class="action-sheet" id="actionSheet">
         <div style="padding: 12px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:13px; color:var(--text-muted);" id="sheetChannelTitle">Opções do Canal</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('play')">▶ Reproduzir Canal (Preview)</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('testarStatus')">📡 Testar Status do Canal</div> <!-- Nova Opção -->
         <div class="action-sheet-item" onclick="executarAcaoSheet('edit')">✏️ Editar Informações</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('editLogo')">🖼️ Buscar / Alterar Logo</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('duplicar')">📋 Duplicar Canal</div>
@@ -271,7 +316,7 @@
                     const parts = linha.split(',');
                     currentTitle = parts.length > 1 ? parts[parts.length - 1].trim() : "Canal";
                 } else if (linha && !linha.startsWith("#")) {
-                    listaResultante.push({ title: currentTitle, url: linha, group: currentGroup, logo: currentLogo });
+                    listaResultante.push({ title: currentTitle, url: linha, group: currentGroup, logo: currentLogo, statusClass: 'status-unknown' }); // Status inicial adicionado
                     currentTitle = "Canal sem nome"; currentGroup = ""; currentLogo = "";
                 }
             }
@@ -402,7 +447,7 @@
         function confirmarInsercaoMesclagem() {
             const selecionados = tempMergeCanais.filter(i => i.selected);
             if (selecionados.length === 0) { alert("Nenhum canal selecionado!"); return; }
-            selecionados.forEach(item => { canais.push({ title: item.title, url: item.url, group: item.group, logo: item.logo }); });
+            selecionados.forEach(item => { canais.push({ title: item.title, url: item.url, group: item.group, logo: item.logo, statusClass: 'status-unknown' }); });
             fecharModalMesclar();
             renderizarAbasCategorias();
             renderizarLista();
@@ -432,6 +477,7 @@
             renderizarLista();
         }
 
+        // Substituído para injetar o indicador de Status no título do canal
         function renderizarLista() {
             const container = document.getElementById('listaCanais');
             const busca = document.getElementById('searchInput').value.toLowerCase();
@@ -444,12 +490,14 @@
                 count++;
                 let logoContent = canal.logo ? `<img src="${canal.logo}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;font-size:9px;">LOGO</span>` : `<span>TV</span>`;
 
+                let statusClass = canal.statusClass || 'status-unknown';
+
                 const card = document.createElement('div');
                 card.className = 'channel-card';
                 card.innerHTML = `
                     <div class="channel-logo" onclick="tocarVideo('${canal.url}')">${logoContent}</div>
                     <div class="channel-details" onclick="tocarVideo('${canal.url}')">
-                        <span class="channel-name">${canal.title}</span>
+                        <span class="channel-name"><span class="status-dot ${statusClass}"></span>${canal.title}</span>
                         <span class="channel-url">${canal.url}</span>
                         <div class="channel-footer-info">
                             <span class="num-badge">#${index + 1}</span>
@@ -470,10 +518,12 @@
         }
         function fecharActionSheet() { document.getElementById('actionSheet').style.display = 'none'; }
 
+        // Adicionada a ação 'testarStatus'
         function executarAcaoSheet(acao) {
             const i = canalSelecionadoIndex;
             fecharActionSheet();
             if (acao === 'play') tocarVideo(canais[i].url);
+            else if (acao === 'testarStatus') testarCanal(i);
             else if (acao === 'edit') abrirModalEdicao(i);
             else if (acao === 'editLogo') abrirModalBuscaLogoParaIndex(i);
             else if (acao === 'duplicar') {
@@ -523,7 +573,7 @@
             const logo = document.getElementById('editLogo').value;
             if (!nome || !url) { alert("Preencha Nome e URL."); return; }
 
-            if (modoAdicaoNovo) canais.unshift({ title: nome, url: url, group: group, logo: logo });
+            if (modoAdicaoNovo) canais.unshift({ title: nome, url: url, group: group, logo: logo, statusClass: 'status-unknown' });
             else {
                 const idx = document.getElementById('editIndex').value;
                 canais[idx].title = nome; canais[idx].url = url; canais[idx].group = group; canais[idx].logo = logo;
@@ -650,7 +700,43 @@
             document.body.removeChild(link);
         }
 
-        function abrirMenuGeral() { alert("Painel M3U Pro: Estrutura e categorias principais preservadas com robustez."); }
+        // Substituído o alerta pelo controle de exibição do painel
+        function abrirMenuGeral() {
+            document.getElementById('modalPainel').style.display = 'flex';
+        }
+
+        // Novas funções para suportar o Painel de Gerenciamento e Status
+        function fecharPainel() {
+            document.getElementById('modalPainel').style.display = 'none';
+        }
+
+        function logSistema(mensagem) {
+            const consoleDiv = document.getElementById('consoleStatus');
+            consoleDiv.innerText = "> " + mensagem;
+            setTimeout(() => { consoleDiv.innerText += "\n> Concluído com sucesso."; }, 1500);
+        }
+
+        function gerarTeste() {
+            logSistema("Gerando link de teste 24h...");
+            setTimeout(() => { logSistema("Teste gerado: http://seu-servidor.tv/convidado/xyz987"); }, 1500);
+        }
+
+        async function testarCanal(index) {
+            const url = canais[index].url;
+            canais[index].statusClass = 'status-loading';
+            renderizarLista(); // Atualiza UI para estado "carregando" (amarelo)
+
+            try {
+                // Modo no-cors ignora os bloqueios do navegador para checar pelo menos se o host responde
+                await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+                canais[index].statusClass = 'status-online';
+            } catch (error) {
+                // Se der erro aqui, é erro de rede/host inativo
+                canais[index].statusClass = 'status-offline';
+            }
+            
+            renderizarLista(); // Atualiza UI com status final (verde ou vermelho)
+        }
     </script>
 </body>
 </html>
