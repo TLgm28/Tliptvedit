@@ -18,100 +18,102 @@
         --badge-text: #34d399;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 90px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 70px; }
     
     .sticky-header-container { position: sticky; top: 0; z-index: 100; background: var(--bg-main); border-bottom: 1px solid var(--border-color); }
 
-    .top-bar { background: #1a1410; padding: 12px 15px; }
-    .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .playlist-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    .top-bar { background: #1a1410; padding: 8px 10px; }
+    .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .playlist-title { font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 6px; }
     
-    .top-icons { display: flex; gap: 15px; font-size: 20px; color: var(--text-muted); align-items: center; }
-    .top-icons span { padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .top-icons { display: flex; gap: 12px; font-size: 18px; color: var(--text-muted); align-items: center; }
+    .top-icons span { padding: 2px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .top-icons span:active { color: var(--accent); }
     
-    .meta-badges { display: flex; gap: 8px; font-size: 11px; margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
-    .badge-count { background: #1e3a4c; color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
-    .badge-type { background: #26211c; color: var(--text-muted); padding: 4px 10px; border-radius: 6px; }
-    .btn-merge { background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
-    .btn-auto-logo { background: #0ea5e9; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .meta-badges { display: flex; gap: 6px; font-size: 10px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
+    .badge-count { background: #1e3a4c; color: #60a5fa; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+    .badge-type { background: #26211c; color: var(--text-muted); padding: 2px 8px; border-radius: 4px; }
+    .btn-merge { background: #8b5cf6; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
 
-    .cat-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .cat-wrapper { display: flex; align-items: center; gap: 6px; }
+    .cat-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; flex-grow: 1; }
     .cat-tabs::-webkit-scrollbar { display: none; }
-    .tab-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+    .tab-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 10px; border-radius: 14px; font-size: 11px; white-space: nowrap; cursor: pointer; }
     .tab-btn.active { background: #1d4ed8; color: white; border-color: #2563eb; }
+    .btn-add-cat { background: var(--bg-card); border: 1px dashed var(--accent); color: var(--accent); padding: 4px 8px; border-radius: 14px; font-size: 11px; white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
 
-    .search-box { padding: 10px 15px; background: #18120e; display: flex; gap: 8px; align-items: center; }
-    .search-box input[type="text"] { flex-grow: 1; min-width: 100px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 14px; outline: none; }
+    .search-box { padding: 6px 10px; background: #18120e; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+    .search-box input[type="text"] { flex-grow: 1; min-width: 90px; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 12px; outline: none; }
     
-    .btn-batch-actions { background: #26211c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 9px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .btn-batch-actions { background: #26211c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
     .btn-batch-actions.active-batch { background: #8b5cf6; color: white; border-color: #7c3aed; }
 
-    .btn-apply-swap { background: #38bdf8; color: #000; border: none; padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+    .btn-apply-swap { background: #38bdf8; color: #000; border: none; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; white-space: nowrap; }
 
-    .list-container { padding: 10px 15px; }
-    .channel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; position: relative; }
-    .channel-checkbox { width: 18px; height: 18px; accent-color: #38bdf8; cursor: pointer; flex-shrink: 0; }
+    .list-container { padding: 6px 10px; }
+    .channel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; position: relative; }
+    .channel-checkbox { width: 16px; height: 16px; accent-color: #38bdf8; cursor: pointer; flex-shrink: 0; }
     
-    .channel-logo { width: 48px; height: 48px; background: #110e0c; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-color); cursor: pointer; }
+    .channel-logo { width: 38px; height: 38px; background: #110e0c; border-radius: 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-color); cursor: pointer; transition: 0.2s; }
+    .channel-logo:active { opacity: 0.7; transform: scale(0.95); }
     .channel-logo img { width: 100%; height: 100%; object-fit: contain; }
-    .channel-logo span { font-size: 10px; color: var(--text-muted); text-align: center; }
+    .channel-logo span { font-size: 9px; color: var(--text-muted); text-align: center; }
     
     .channel-details { flex-grow: 1; overflow: hidden; cursor: pointer; }
-    .channel-name { font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
-    .channel-url { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 2px; }
+    .channel-name { font-weight: bold; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+    .channel-url { font-size: 10px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 1px; }
     
-    .channel-footer-info { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
-    .num-badge { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-    .group-badge { background: var(--badge-bg); color: var(--badge-text); font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+    .channel-footer-info { display: flex; gap: 5px; margin-top: 4px; align-items: center; }
+    .num-badge { background: #1e293b; color: #94a3b8; font-size: 9px; padding: 1px 5px; border-radius: 3px; font-weight: bold; }
+    .group-badge { background: var(--badge-bg); color: var(--badge-text); font-size: 9px; padding: 1px 5px; border-radius: 3px; }
 
-    .swap-actions { display: flex; gap: 8px; align-items: center; margin-left: auto; margin-right: 5px; flex-shrink: 0; }
-    .swap-circle { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; display: inline-block; transition: all 0.2s; }
+    .swap-actions { display: flex; gap: 6px; align-items: center; margin-left: auto; margin-right: 4px; flex-shrink: 0; }
+    .swap-circle { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; display: inline-block; transition: all 0.2s; }
     .swap-circle.blue-outline { border: 2px solid #3b82f6; background: transparent; }
     .swap-circle.blue-filled { border: 2px solid #3b82f6; background: #3b82f6; }
     .swap-circle.red-outline { border: 2px solid #ef4444; background: transparent; }
     .swap-circle.red-filled { border: 2px solid #ef4444; background: #ef4444; }
 
-    .more-options-btn { background: transparent; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; padding: 4px; }
+    .more-options-btn { background: transparent; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 2px; }
 
-    .fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: #38bdf8; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); cursor: pointer; border: none; z-index: 90; font-weight: bold; }
+    .fab { position: fixed; bottom: 16px; right: 16px; width: 48px; height: 48px; background: #38bdf8; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 10px rgba(0,0,0,0.6); cursor: pointer; border: none; z-index: 90; font-weight: bold; }
 
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
     .modal-content { background: #1a1410; width: 95%; max-width: 650px; max-height: 90vh; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
-    .modal-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-    .modal-body { padding: 15px; overflow-y: auto; flex-grow: 1; }
-    .modal-footer { padding: 12px 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #15100d; }
+    .modal-header { padding: 12px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+    .modal-body { padding: 12px; overflow-y: auto; flex-grow: 1; }
+    .modal-footer { padding: 10px 12px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #15100d; }
 
-    .form-group { margin-bottom: 12px; }
-    .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; background: #110e0c; border: 1px solid var(--border-color); color: white; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    .form-group { margin-bottom: 10px; }
+    .form-group label { display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; background: #110e0c; border: 1px solid var(--border-color); color: white; border-radius: 6px; box-sizing: border-box; font-size: 13px; }
 
-    .merge-item { display: flex; flex-direction: column; gap: 6px; background: #14100d; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
-    .merge-top-row { display: flex; align-items: center; gap: 8px; }
-    .merge-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: #8b5cf6; cursor: pointer; flex-shrink: 0; }
-    .merge-name-input { flex-grow: 1; background: #110e0c; border: 1px solid var(--border-color); color: white; padding: 8px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; outline: none; }
-    .merge-url-input { width: 100%; background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: 4px; font-size: 11px; outline: none; box-sizing: border-box; }
-    .merge-cat-select { background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 11px; padding: 6px; border-radius: 4px; flex-grow: 1; outline: none; }
+    .merge-item { display: flex; flex-direction: column; gap: 5px; background: #14100d; padding: 8px; border-radius: 6px; margin-bottom: 6px; border: 1px solid var(--border-color); }
+    .merge-top-row { display: flex; align-items: center; gap: 6px; }
+    .merge-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #8b5cf6; cursor: pointer; flex-shrink: 0; }
+    .merge-name-input { flex-grow: 1; background: #110e0c; border: 1px solid var(--border-color); color: white; padding: 6px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; outline: none; }
+    .merge-url-input { width: 100%; background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px; border-radius: 4px; font-size: 10px; outline: none; box-sizing: border-box; }
+    .merge-cat-select { background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 10px; padding: 5px; border-radius: 4px; flex-grow: 1; outline: none; }
 
-    #playerModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 15px; box-sizing: border-box; }
-    .player-wrapper { width: 100%; max-width: 700px; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+    #playerModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 10px; box-sizing: border-box; }
+    .player-wrapper { width: 100%; max-width: 700px; background: #000; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 8px 20px rgba(0,0,0,0.8); }
     video { width: 100%; max-height: 55vh; display: block; background: #000; }
-    .close-player-btn { margin-top: 15px; background: #ef4444; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .close-player-btn { margin-top: 10px; background: #ef4444; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; }
 
-    .action-sheet { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1410; border-top-left-radius: 16px; border-top-right-radius: 16px; border-top: 1px solid var(--border-color); z-index: 1500; max-height: 75vh; overflow-y: auto; }
-    .action-sheet-item { padding: 16px 20px; border-bottom: 1px solid #221b16; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+    .action-sheet { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1410; border-top-left-radius: 14px; border-top-right-radius: 14px; border-top: 1px solid var(--border-color); z-index: 1500; max-height: 75vh; overflow-y: auto; }
+    .action-sheet-item { padding: 14px 16px; border-bottom: 1px solid #221b16; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
     .action-sheet-item:active { background: #2a211c; }
 
-    .panel-card { background: #0a0806; border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 12px; }
-    .panel-card h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--text-main); }
-    .btn-red { background: #dc2626; color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; margin-bottom: 8px; width: 100%; text-align: left; }
-    .btn-dark { background: #262626; color: var(--text-muted); border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; width: 100%; text-align: left; }
-    .status-console { background: #000; color: #22c55e; font-family: monospace; padding: 12px; border-radius: 6px; font-size: 12px; min-height: 40px; margin-top: 8px; white-space: pre-wrap; }
+    .panel-card { background: #0a0806; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+    .panel-card h3 { margin: 0 0 10px 0; font-size: 14px; color: var(--text-main); }
+    .btn-red { background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; margin-bottom: 6px; width: 100%; text-align: left; }
+    .btn-dark { background: #262626; color: var(--text-muted); border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px; width: 100%; text-align: left; }
+    .status-console { background: #000; color: #22c55e; font-family: monospace; padding: 10px; border-radius: 6px; font-size: 11px; min-height: 35px; margin-top: 6px; white-space: pre-wrap; }
 
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
     .status-unknown { background: #4b5563; }
-    .status-online { background: #22c55e; box-shadow: 0 0 5px #22c55e; }
-    .status-offline { background: #ef4444; box-shadow: 0 0 5px #ef4444; }
+    .status-online { background: #22c55e; box-shadow: 0 0 4px #22c55e; }
+    .status-offline { background: #ef4444; box-shadow: 0 0 4px #ef4444; }
     .status-loading { background: #eab308; animation: pulse 1s infinite; }
     @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 </style>
@@ -138,19 +140,27 @@
                 <span class="badge-count" id="totalCanaisBadge">0 canais</span>
                 <span class="badge-type">M3U Pro</span>
                 <button class="btn-merge" onclick="dispararMesclagem()">🔗 Mesclar Lista</button>
-                <button class="btn-auto-logo" onclick="buscarLogosAutomaticas()">🔍 Auto Logos</button>
             </div>
 
-            <div class="cat-tabs" id="catTabsContainer">
-                <div class="tab-btn active" onclick="filtrarCategoria('TODOS', this)">Todos</div>
+            <div class="cat-wrapper">
+                <div class="cat-tabs" id="catTabsContainer">
+                    <div class="tab-btn active" onclick="filtrarCategoria('TODOS', this)">Todos</div>
+                </div>
+                <button class="btn-add-cat" onclick="abrirModalGerenciarCategorias()" title="Gerenciar Categorias" style="border-color: #8b5cf6; color: #8b5cf6;">✏️ Gerenciar</button>
+                <button class="btn-add-cat" onclick="abrirModalNovaCategoria()" title="Adicionar Nova Categoria">➕ Nova</button>
             </div>
         </div>
 
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Pesquisar canal na lista..." oninput="renderizarLista()">
-            <button id="btnBatchActions" class="btn-batch-actions" onclick="abrirMenuAcoesLote()">⚙️ Ações (<span id="batchCountNum">0</span>)</button>
+            <input type="checkbox" id="selectAllCatCheckbox" onclick="alternarSelecionarTodaCategoria(this.checked)" title="Marcar/Desmarcar todos da categoria atual" class="channel-checkbox">
             
-            <div id="swapCounterIndicator" style="font-size: 11px; color: var(--text-muted); white-space: nowrap; background: #1e1510; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold;">
+            <input type="text" id="searchInput" placeholder="Pesquisar canal..." oninput="renderizarLista()">
+            
+            <button id="btnBatchActions" class="btn-batch-actions" onclick="abrirMenuAcoesLote()">⚙️ (<span id="batchCountNum">0</span>)</button>
+            
+            <button class="btn-batch-actions" onclick="abrirEdicaoRawSelecionados()" title="Edição RAW" style="background:#0369a1; color:white; border-color:#0284c7;">💻 RAW</button>
+            
+            <div id="swapCounterIndicator" style="font-size: 10px; color: var(--text-muted); white-space: nowrap; background: #1e1510; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-color); font-weight: bold;">
                 🔵 <span id="countBlue">0</span> | 🔴 <span id="countRed">0</span>
             </div>
 
@@ -159,7 +169,7 @@
     </div>
 
     <div class="list-container" id="listaCanais">
-        <div style="text-align:center; color: var(--text-muted); margin-top: 50px; font-size: 14px;">
+        <div style="text-align:center; color: var(--text-muted); margin-top: 40px; font-size: 13px;">
             Toque no ícone 📂 acima para carregar sua lista M3U.
         </div>
     </div>
@@ -177,7 +187,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span id="modalEditarTitulo">Editar canal</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalEdicao()">✕</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalEdicao()">✕</span>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="editIndex">
@@ -195,75 +205,84 @@
                 </div>
                 <div class="form-group">
                     <label>TVG Logo URL</label>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <div id="previewLogoContainer" style="width: 42px; height: 42px; background: #110e0c; border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
-                            <span style="font-size: 9px; color: var(--text-muted);">PREVIEW</span>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <div id="previewLogoContainer" style="width: 38px; height: 38px; background: #110e0c; border: 1px solid var(--border-color); border-radius: 5px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+                            <span style="font-size: 8px; color: var(--text-muted);">PREVIEW</span>
                         </div>
-                        <input type="text" id="editLogo" style="flex: 1;" oninput="atualizarPreviewInputLogo(this.value)">
-                        <button type="button" onclick="abrirModalBuscaLogo()" style="background: #0ea5e9; border: none; color: white; padding: 0 14px; border-radius: 6px; cursor: pointer; font-size: 18px; height: 42px;" title="Buscar logo">🔍</button>
+                        <input type="text" id="editLogo" style="flex: 1;" oninput="atualizarPreviewInputLogo(this.value)" placeholder="Cole a URL da logo aqui">
                     </div>
                 </div>
             </div>
             <div class="modal-footer" style="justify-content: flex-end;">
-                <button onclick="fecharModalEdicao()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Cancelar</button>
-                <button onclick="salvarEdicaoCanal()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:10px 16px; border-radius:6px; cursor:pointer;">Salvar</button>
+                <button onclick="fecharModalEdicao()" style="background:#33261e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Cancelar</button>
+                <button onclick="salvarEdicaoCanal()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Salvar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL EDITAR RAW -->
+    <div class="modal" id="modalNovaCategoria">
+        <div class="modal-content" style="max-width: 380px;">
+            <div class="modal-header">
+                <span>📁 Adicionar Nova Categoria</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalNovaCategoria()">✕</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nome da Nova Categoria *</label>
+                    <input type="text" id="inputNovaCategoriaNome" placeholder="Ex: Esportes HD">
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end;">
+                <button onclick="fecharModalNovaCategoria()" style="background:#33261e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Cancelar</button>
+                <button onclick="salvarNovaCategoria()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalGerenciarCategorias">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <span>📁 Gerenciar Lista de Categorias</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalGerenciarCategorias()">✕</span>
+            </div>
+            <div class="modal-body" id="listaGerenciarCategoriasBody" style="max-height: 50vh; overflow-y: auto;">
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end;">
+                <button onclick="fecharModalGerenciarCategorias()" style="background:#33261e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="modalRawEdit">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content" style="max-width: 550px;">
             <div class="modal-header">
                 <span>💻 Editar Código RAW (M3U) do Canal</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalRawEdit()">✕</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalRawEdit()">✕</span>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="rawEditIndex">
                 <div class="form-group">
                     <label>Linha Extinf e URL (Modo avançado)</label>
-                    <textarea id="textareaRawContent" rows="6" style="width:100%; background:#110e0c; border:1px solid var(--border-color); color:#38bdf8; font-family:monospace; padding:10px; border-radius:6px; font-size:12px; resize:vertical;"></textarea>
+                    <textarea id="textareaRawContent" rows="5" style="width:100%; background:#110e0c; border:1px solid var(--border-color); color:#38bdf8; font-family:monospace; padding:8px; border-radius:6px; font-size:11px; resize:vertical;"></textarea>
                 </div>
             </div>
             <div class="modal-footer" style="justify-content: flex-end;">
-                <button onclick="fecharModalRawEdit()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Cancelar</button>
-                <button onclick="salvarRawEdit()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:10px 16px; border-radius:6px; cursor:pointer;">Salvar Alterações</button>
+                <button onclick="fecharModalRawEdit()" style="background:#33261e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Cancelar</button>
+                <button onclick="salvarRawEdit()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Salvar</button>
             </div>
         </div>
     </div>
 
     <div class="modal" id="modalLoteCustom">
-        <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-content" style="max-width: 550px;">
             <div class="modal-header">
                 <span id="modalLoteTitulo">Ações em Lote</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalLoteCustom()">✕</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalLoteCustom()">✕</span>
             </div>
             <div class="modal-body" id="modalLoteBody">
             </div>
             <div class="modal-footer" style="justify-content: flex-end;">
-                <button onclick="fecharModalLoteCustom()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Fechar</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="modalBuscaLogo">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <span>🔍 Busca de Logos (Preview Instantâneo)</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalBuscaLogo()">✕</span>
-            </div>
-            <div class="modal-body">
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                    <input type="text" id="inputTermoBuscaLogo" placeholder="Nome do canal..." style="flex: 1; padding: 10px; background: #110e0c; border: 1px solid var(--border-color); color: white; border-radius: 6px;">
-                    <button type="button" onclick="executarBuscaLogoGoogle()" style="background: #0ea5e9; border: none; color: white; padding: 0 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">Buscar</button>
-                </div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Toque na imagem desejada para aplicá-la instantaneamente:</div>
-                <div id="containerResultadosLogo" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; max-height: 380px; overflow-y: auto; background: #110e0c; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); min-height: 140px; align-content: start;">
-                    <div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 45px; font-size: 12px;">Digite o termo e clique em buscar.</div>
-                </div>
-            </div>
-            <div class="modal-footer" style="justify-content: flex-end;">
-                <button onclick="fecharModalBuscaLogo()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Fechar</button>
+                <button onclick="fecharModalLoteCustom()" style="background:#33261e; border:none; color:white; padding:8px 14px; border-radius:6px; cursor:pointer; font-size:12px;">Fechar</button>
             </div>
         </div>
     </div>
@@ -272,22 +291,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span>Mesclagem de Listas (Soberana)</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalMesclar()">✕</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharModalMesclar()">✕</span>
             </div>
             <div class="modal-body">
-                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                    <input type="text" id="searchMergeInput" placeholder="Filtrar 2ª lista..." oninput="renderizarListaMesclagem()" style="flex:1; padding:10px; background:#110e0c; border:1px solid var(--border-color); color:white; border-radius:6px;">
-                    <button onclick="marcarTodosMerge(true)" style="background:#33261e; border:none; color:white; padding:8px 12px; border-radius:6px; font-size:11px; cursor:pointer;">Todos</button>
-                    <button onclick="marcarTodosMerge(false)" style="background:#33261e; border:none; color:white; padding:8px 12px; border-radius:6px; font-size:11px; cursor:pointer;">Nenhum</button>
+                <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+                    <input type="text" id="searchMergeInput" placeholder="Filtrar 2ª lista..." oninput="renderizarListaMesclagem()" style="flex:1; padding:8px; background:#110e0c; border:1px solid var(--border-color); color:white; border-radius:6px; font-size:12px;">
+                    <button onclick="marcarTodosMerge(true)" style="background:#33261e; border:none; color:white; padding:6px 10px; border-radius:6px; font-size:10px; cursor:pointer;">Todos</button>
+                    <button onclick="marcarTodosMerge(false)" style="background:#33261e; border:none; color:white; padding:6px 10px; border-radius:6px; font-size:10px; cursor:pointer;">Nenhum</button>
                 </div>
-                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;" id="mergeCountInfo">0 canais encontrados.</div>
-                <div id="listaCanaisMergeContainer" style="max-height: 50vh; overflow-y: auto;"></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 6px;" id="mergeCountInfo">0 canais encontrados.</div>
+                <div id="listaCanaisMergeContainer" style="max-height: 45vh; overflow-y: auto;"></div>
             </div>
             <div class="modal-footer">
-                <span style="font-size: 12px; color: var(--text-muted);" id="selecionadosCountText">0 selecionados</span>
-                <div style="display: flex; gap: 8px;">
-                    <button onclick="fecharModalMesclar()" style="background:#33261e; border:none; color:white; padding:10px 14px; border-radius:6px; cursor:pointer;">Cancelar</button>
-                    <button onclick="confirmarInsercaoMesclagem()" style="background:#8b5cf6; border:none; color:white; font-weight:bold; padding:10px 14px; border-radius:6px; cursor:pointer;">Adicionar Selecionados</button>
+                <span style="font-size: 11px; color: var(--text-muted);" id="selecionadosCountText">0 selecionados</span>
+                <div style="display: flex; gap: 6px;">
+                    <button onclick="fecharModalMesclar()" style="background:#33261e; border:none; color:white; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:11px;">Cancelar</button>
+                    <button onclick="confirmarInsercaoMesclagem()" style="background:#8b5cf6; border:none; color:white; font-weight:bold; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:11px;">Adicionar</button>
                 </div>
             </div>
         </div>
@@ -297,12 +316,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <span>Painel de Gerenciamento</span>
-                <span style="cursor:pointer; font-size:20px;" onclick="fecharPainel()">✕</span>
+                <span style="cursor:pointer; font-size:18px;" onclick="fecharPainel()">✕</span>
             </div>
             <div class="modal-body" style="background: #14100d;">
                 <div class="panel-card">
                     <h3>Gerenciamento de Lista</h3>
-                    <button class="btn-red" onclick="excluirListaAtual(); fecharPainel();" style="background: #dc2626;">🗑️ Excluir Lista Atual e Carregar Outra</button>
+                    <button class="btn-red" onclick="excluirListaAtual(); fecharPainel();">🗑️ Excluir Lista Atual e Carregar Outra</button>
                 </div>
                 <div class="panel-card">
                     <h3>Sincronização de Conteúdo</h3>
@@ -322,11 +341,11 @@
     </div>
 
     <div class="action-sheet" id="actionSheet">
-        <div style="padding: 12px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:13px; color:var(--text-muted);" id="sheetChannelTitle">Opções do Canal</div>
+        <div style="padding: 10px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:12px; color:var(--text-muted);" id="sheetChannelTitle">Opções do Canal</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('play')">▶ Reproduzir Canal (Preview)</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('testarStatus')">📡 Testar Status do Canal</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('edit')">✏️ Editar Informações</div>
-        <div class="action-sheet-item" onclick="executarAcaoSheet('editLogo')">🖼️ Buscar / Alterar Logo</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('editLogo')">🖼️ Alterar Logo Rápido</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('editRaw')">💻 Editar Arquivo RAW</div>
         <div class="action-sheet-item" onclick="executarAcaoSheet('posicao')">↕️ Mudar Posição na Lista</div>
         <div class="action-sheet-item" style="color:#ef4444;" onclick="executarAcaoSheet('remover')">🗑️ Remover Canal</div>
@@ -334,8 +353,7 @@
     </div>
 
     <div class="action-sheet" id="batchActionSheet">
-        <div style="padding: 12px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:13px; color:var(--text-muted);" id="batchSheetTitle">Ações em Lote</div>
-        <div class="action-sheet-item" onclick="executarAcaoLote('autoLogo')">🔍 Buscar Auto Logos (Nos Selecionados)</div>
+        <div style="padding: 10px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:12px; color:var(--text-muted);" id="batchSheetTitle">Ações em Lote</div>
         <div class="action-sheet-item" onclick="executarAcaoLote('loteSequencialLogos')">📋 Colar Links de Logos em Sequência</div>
         <div class="action-sheet-item" onclick="executarAcaoLote('mudarCategoria')">📁 Mudar Categoria em Lote</div>
         <div class="action-sheet-item" onclick="executarAcaoLote('escanearMarcados')">📡 Escanear Canais Marcados</div>
@@ -352,12 +370,139 @@
         let canalSelecionadoIndex = null;
         let hlsInstance = null;
         let modoAdicaoNovo = false;
-        let indexCanalEditandoLogoDireto = null;
-        let modoEdicaoLogoMergeIndex = null;
 
         function alternarSelecaoCanal(index, estado) {
             canais[index].selected = estado;
             atualizarBotaoBatchState();
+            atualizarCheckboxGeralEstado();
+        }
+
+        function alternarSelecionarTodaCategoria(estado) {
+            const busca = document.getElementById('searchInput').value.toLowerCase();
+            canais.forEach(canal => {
+                const matchCat = (categoriaAtiva === "TODOS" || canal.group === categoriaAtiva);
+                const matchBusca = (!busca || canal.title.toLowerCase().includes(busca));
+                if (matchCat && matchBusca) {
+                    canal.selected = estado;
+                }
+            });
+            atualizarBotaoBatchState();
+            renderizarLista();
+        }
+
+        function atualizarCheckboxGeralEstado() {
+            const busca = document.getElementById('searchInput').value.toLowerCase();
+            let visiveis = 0;
+            let visiveisSelecionados = 0;
+
+            canais.forEach(canal => {
+                const matchCat = (categoriaAtiva === "TODOS" || canal.group === categoriaAtiva);
+                const matchBusca = (!busca || canal.title.toLowerCase().includes(busca));
+                if (matchCat && matchBusca) {
+                    visiveis++;
+                    if (canal.selected) visiveisSelecionados++;
+                }
+            });
+
+            const masterCb = document.getElementById('selectAllCatCheckbox');
+            if (masterCb) {
+                masterCb.checked = (visiveis > 0 && visiveisSelecionados === visiveis);
+                masterCb.indeterminate = (visiveisSelecionados > 0 && visiveisSelecionados < visiveis);
+            }
+        }
+
+        function abrirEdicaoRawSelecionados() {
+            const selecionados = canais.filter(c => c.selected);
+            if (selecionados.length === 0) {
+                alert("Selecione pelo menos um canal (marcando as caixinhas) para usar a Edição RAW.");
+                return;
+            }
+            let rawText = "";
+            selecionados.forEach(c => {
+                let logoStr = c.logo ? ` tvg-logo="${c.logo}"` : '';
+                let groupStr = c.group ? ` group-title="${c.group}"` : '';
+                rawText += `#EXTINF:-1${logoStr}${groupStr},${c.title}\n${c.url}\n`;
+            });
+
+            document.getElementById('modalLoteTitulo').innerText = `Edição RAW - ${selecionados.length} selecionados`;
+            document.getElementById('modalLoteBody').innerHTML = `
+                <div class="form-group">
+                    <label>Código RAW (M3U) de todos os itens selecionados (editável em lote):</label>
+                    <textarea id="textareaRawSelecionados" rows="8" style="width:100%; background:#110e0c; border:1px solid var(--border-color); color:#38bdf8; font-family:monospace; padding:8px; border-radius:6px; font-size:11px; resize:vertical;">${rawText}</textarea>
+                </div>
+                <button onclick="salvarRawSelecionadosLote()" style="background:#38bdf8; border:none; color:#000; padding:8px 14px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; margin-top:8px; font-size:12px;">Salvar Alterações RAW</button>
+            `;
+            document.getElementById('modalLoteCustom').style.display = 'flex';
+        }
+
+        function salvarRawSelecionadosLote() {
+            const textoRaw = document.getElementById('textareaRawSelecionados').value.trim();
+            const blocos = textoRaw.split('#EXTINF:').filter(b => b.trim().length > 0);
+            
+            if (blocos.length === 0) {
+                alert("Nenhum bloco #EXTINF válido encontrado.");
+                return;
+            }
+
+            let novosCanaisSelecionados = [];
+            blocos.forEach(bloco => {
+                const linhas = bloco.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                if (linhas.length >= 1) {
+                    let extinfLine = linhas[0];
+                    let urlLine = linhas.length > 1 ? linhas[1] : "";
+                    
+                    const groupMatch = extinfLine.match(/group-title="([^"]+)"/i);
+                    const logoMatch = extinfLine.match(/tvg-logo="([^"]+)"/i);
+                    const parts = extinfLine.split(',');
+                    const titleVal = parts.length > 1 ? parts[parts.length - 1].trim() : "Canal";
+
+                    if (urlLine) {
+                        novosCanaisSelecionados.push({
+                            title: titleVal,
+                            url: urlLine,
+                            group: groupMatch ? groupMatch[1] : (categoriasList.length > 0 ? categoriasList[0] : ""),
+                            logo: logoMatch ? logoMatch[1] : "",
+                            statusClass: 'status-unknown',
+                            swapState: '',
+                            selected: true
+                        });
+                    }
+                }
+            });
+
+            if (novosCanaisSelecionados.length > 0) {
+                let novosCanais = [];
+                let selIndex = 0;
+                let usedNew = false;
+                
+                canais.forEach(c => {
+                    if (c.selected) {
+                        if (!usedNew && novosCanaisSelecionados[selIndex]) {
+                            novosCanais.push(novosCanaisSelecionados[selIndex]);
+                            selIndex++;
+                            if (selIndex >= novosCanaisSelecionados.length) usedNew = true;
+                        }
+                    } else {
+                        novosCanais.push(c);
+                    }
+                });
+                
+                while(selIndex < novosCanaisSelecionados.length) {
+                    novosCanais.push(novosCanaisSelecionados[selIndex]);
+                    selIndex++;
+                }
+
+                canais = novosCanais;
+                fecharModalLoteCustom();
+                extrairCategorias();
+                renderizarAbasCategorias();
+                renderizarLista();
+                atualizarBotaoBatchState();
+                atualizarContadorSwapVisual();
+                alert("Canais atualizados com sucesso via Edição RAW!");
+            } else {
+                alert("Erro ao processar o formato RAW.");
+            }
         }
 
         function atualizarBotaoBatchState() {
@@ -388,7 +533,7 @@
         }
 
         function excluirListaAtual() {
-            if (confirm("Deseja realmente excluir a lista atual? Todos os canais serão apagados para que você possa carregar outra.")) {
+            if (confirm("Deseja realmente excluir a lista atual? Todos os canais serão apagados.")) {
                 canais = [];
                 categoriasList = [];
                 categoriaAtiva = "TODOS";
@@ -401,7 +546,7 @@
             }
         }
 
-        function executarAcaoLote(acao) {
+        async function executarAcaoLote(acao) {
             fecharBatchActionSheet();
             const selecionados = canais.filter(c => c.selected);
 
@@ -421,51 +566,14 @@
                 }
             } else if (acao === 'escanearMarcados') {
                 escanearCanaisSelecionadosEmLote(selecionados);
-            } else if (acao === 'autoLogo') {
-                let count = 0;
-                const baseLogosConhecidas = {
-                    "globo": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Rede_Globo_logo_2021.png",
-                    "sbt": "https://upload.wikimedia.org/wikipedia/commons/4/44/SBT_logo_2023.png",
-                    "record": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Record_TV_logo_2016.png",
-                    "band": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Band_logo_2018.png",
-                    "redetv": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RedeTV%21_logo_2019.png",
-                    "cultura": "https://upload.wikimedia.org/wikipedia/commons/8/87/TV_Cultura_logo_2020.png",
-                    "telecine": "https://upload.wikimedia.org/wikipedia/commons/6/63/Telecine_logo_2020.png",
-                    "hbo": "https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg",
-                    "tnt": "https://upload.wikimedia.org/wikipedia/commons/b/b3/TNT_logo_2016.png",
-                    "espn": "https://upload.wikimedia.org/wikipedia/commons/a/a2/ESPN_wordmark.svg",
-                    "sportv": "https://upload.wikimedia.org/wikipedia/commons/3/36/SporTV_logo_2020.png"
-                };
-                
-                canais.forEach(canal => {
-                    if (canal.selected) {
-                        let nomeLimpo = canal.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\b(hd|sd|fhd|4k|br|brasil|hevc|iptv|24h|online|canal)\b/g, "").replace(/[^a-z0-9]/g, " ").trim();
-                        let encontrou = false;
-                        for (let chave in baseLogosConhecidas) {
-                            if (nomeLimpo.includes(chave)) { 
-                                canal.logo = baseLogosConhecidas[chave]; 
-                                count++; 
-                                encontrou = true; 
-                                break; 
-                            }
-                        }
-                        if (!encontrou) {
-                            let queryFormatada = encodeURIComponent(canal.title.replace(/[^a-zA-Z0-9 ]/g, "").trim());
-                            canal.logo = `https://ui-avatars.com/api/?name=${queryFormatada}&background=1f1814&color=38bdf8&size=128&bold=true`;
-                            count++;
-                        }
-                    }
-                });
-                limparSelecaoGeral();
-                alert(`Logos aplicadas em ${count} canais selecionados.`);
             } else if (acao === 'loteSequencialLogos') {
-                document.getElementById('modalLoteTitulo').innerText = `Colar Links Sequenciais (${selecionados.length} canais marcados)`;
+                document.getElementById('modalLoteTitulo').innerText = `Colar Logos (${selecionados.length} marcados)`;
                 document.getElementById('modalLoteBody').innerHTML = `
                     <div class="form-group">
-                        <label>Cole os links de imagem um por linha (Linha 1 para o 1º canal, Linha 2 para o 2º, etc.):</label>
-                        <textarea id="textareaLinksSequenciais" rows="8" placeholder="https://exemplo.com/logo1.png&#10;https://exemplo.com/logo2.png" style="font-family: monospace; font-size: 12px; resize: vertical;"></textarea>
+                        <label>Cole os links de imagem um por linha (Linha 1 para o 1º canal, etc.):</label>
+                        <textarea id="textareaLinksSequenciais" rows="6" placeholder="https://exemplo.com/logo1.png&#10;https://exemplo.com/logo2.png" style="font-family: monospace; font-size: 11px; resize: vertical;"></textarea>
                     </div>
-                    <button onclick="aplicarLinksSequenciaisLote()" style="background:#0ea5e9; border:none; color:white; padding:10px 16px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px;">Aplicar Links aos Canais</button>
+                    <button onclick="aplicarLinksSequenciaisLote()" style="background:#0ea5e9; border:none; color:white; padding:8px 14px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; margin-top:8px; font-size:12px;">Aplicar Links</button>
                 `;
                 document.getElementById('modalLoteCustom').style.display = 'flex';
             } else if (acao === 'mudarCategoria') {
@@ -477,7 +585,7 @@
                         <label>Selecione a Nova Categoria</label>
                         <select id="selectNovaCatLote">${optionsHtml}</select>
                     </div>
-                    <button onclick="aplicarMudancaCategoriaLote()" style="background:#8b5cf6; border:none; color:white; padding:10px 16px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; margin-top:10px;">Aplicar Alteração</button>
+                    <button onclick="aplicarMudancaCategoriaLote()" style="background:#8b5cf6; border:none; color:white; padding:8px 14px; border-radius:6px; font-weight:bold; cursor:pointer; width:100%; margin-top:8px; font-size:12px;">Aplicar Alteração</button>
                 `;
                 document.getElementById('modalLoteCustom').style.display = 'flex';
             } else if (acao === 'verRaw') {
@@ -487,11 +595,11 @@
                     let groupStr = c.group ? ` group-title="${c.group}"` : '';
                     rawText += `#EXTINF:-1${logoStr}${groupStr},${c.title}\n${c.url}\n`;
                 });
-                document.getElementById('modalLoteTitulo').innerText = `Código RAW (M3U) - ${selecionados.length} canais`;
+                document.getElementById('modalLoteTitulo').innerText = `Código RAW - ${selecionados.length} canais`;
                 document.getElementById('modalLoteBody').innerHTML = `
                     <div class="form-group">
-                        <label>Texto M3U formatado (pronto para copiar)</label>
-                        <textarea readonly style="width:100%; height:250px; background:#110e0c; border:1px solid var(--border-color); color:#38bdf8; font-family:monospace; padding:10px; border-radius:6px; font-size:12px; resize:none;">${rawText}</textarea>
+                        <label>Texto M3U formatado</label>
+                        <textarea readonly style="width:100%; height:200px; background:#110e0c; border:1px solid var(--border-color); color:#38bdf8; font-family:monospace; padding:8px; border-radius:6px; font-size:11px; resize:none;">${rawText}</textarea>
                     </div>
                 `;
                 document.getElementById('modalLoteCustom').style.display = 'flex';
@@ -499,9 +607,7 @@
         }
 
         async function escanearCanaisSelecionadosEmLote(selecionados) {
-            for (let canal of selecionados) {
-                canal.statusClass = 'status-loading';
-            }
+            for (let canal of selecionados) { canal.statusClass = 'status-loading'; }
             renderizarLista();
 
             for (let canal of selecionados) {
@@ -514,7 +620,7 @@
                 renderizarLista();
             }
             limparSelecaoGeral();
-            alert("Escaneamento dos canais selecionados concluído!");
+            alert("Escaneamento concluído!");
         }
 
         function aplicarLinksSequenciaisLote() {
@@ -533,7 +639,8 @@
 
             fecharModalLoteCustom();
             limparSelecaoGeral();
-            alert(`Sucesso! Logos sequenciais aplicadas em ${countAplicados} canais.`);
+            renderizarLista();
+            alert(`Logos aplicadas em ${countAplicados} canais.`);
         }
 
         function aplicarMudancaCategoriaLote() {
@@ -544,7 +651,8 @@
             });
             fecharModalLoteCustom();
             limparSelecaoGeral();
-            alert(`${count} canais movidos para "${novaCat}" com sucesso!`);
+            renderizarLista();
+            alert(`${count} canais movidos para "${novaCat}"!`);
         }
 
         function fecharModalLoteCustom() {
@@ -584,7 +692,7 @@
             });
 
             if (indicesAzuis.length === 0 || indicesVermelhos.length === 0) {
-                alert("Para realizar a troca em lote, marque pelo menos uma bolinha Azul (para cima/origem) e uma Vermelha (para baixo/destino), depois clique em Aplicar.");
+                alert("Marque ao menos uma bolinha Azul e uma Vermelha para trocar posições.");
                 return;
             }
 
@@ -610,7 +718,7 @@
             canais.forEach(c => c.swapState = '');
             renderizarLista();
             atualizarContadorSwapVisual();
-            alert(`Posições reorganizadas em lote com sucesso!`);
+            alert(`Posições reorganizadas com sucesso!`);
         }
 
         function processarArquivo(event) {
@@ -663,41 +771,8 @@
             return listaResultante;
         }
 
-        function buscarLogosAutomaticas() {
-            if (canais.length === 0) { alert("Carrege uma lista primeiro!"); return; }
-            let preenchidos = 0;
-            const baseLogosConhecidas = {
-                "globo": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Rede_Globo_logo_2021.png",
-                "sbt": "https://upload.wikimedia.org/wikipedia/commons/4/44/SBT_logo_2023.png",
-                "record": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Record_TV_logo_2016.png",
-                "band": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Band_logo_2018.png",
-                "redetv": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RedeTV%21_logo_2019.png",
-                "cultura": "https://upload.wikimedia.org/wikipedia/commons/8/87/TV_Cultura_logo_2020.png",
-                "telecine": "https://upload.wikimedia.org/wikipedia/commons/6/63/Telecine_logo_2020.png",
-                "hbo": "https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg",
-                "tnt": "https://upload.wikimedia.org/wikipedia/commons/b/b3/TNT_logo_2016.png",
-                "espn": "https://upload.wikimedia.org/wikipedia/commons/a/a2/ESPN_wordmark.svg",
-                "sportv": "https://upload.wikimedia.org/wikipedia/commons/3/36/SporTV_logo_2020.png"
-            };
-
-            canais.forEach(canal => {
-                let nomeLimpo = canal.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\b(hd|sd|fhd|4k|br|brasil|hevc|iptv|24h|online|canal)\b/g, "").replace(/[^a-z0-9]/g, " ").trim();
-                let encontrou = false;
-                for (let chave in baseLogosConhecidas) {
-                    if (nomeLimpo.includes(chave)) { canal.logo = baseLogosConhecidas[chave]; preenchidos++; encontrou = true; break; }
-                }
-                if (!encontrou) {
-                    let queryFormatada = encodeURIComponent(canal.title.replace(/[^a-zA-Z0-9 ]/g, "").trim());
-                    canal.logo = `https://ui-avatars.com/api/?name=${queryFormatada}&background=1f1814&color=38bdf8&size=128&bold=true`;
-                    preenchidos++;
-                }
-            });
-            renderizarLista();
-            alert(`Processo concluído! Logos otimizadas em ${preenchidos} canais.`);
-        }
-
         function dispararMesclagem() {
-            if (canais.length === 0) { alert("Carrege a lista principal primeiro!"); return; }
+            if (canais.length === 0) { alert("Carregue a lista principal primeiro!"); return; }
             document.getElementById('fileInputMerge').click();
         }
 
@@ -719,6 +794,15 @@
             reader.readAsText(file);
         }
 
+        function alterarLogoRapidoMerge(idx) {
+            const item = tempMergeCanais[idx];
+            const novaUrl = prompt("Nova URL da logo para: " + item.title, item.logo || "");
+            if (novaUrl !== null) {
+                tempMergeCanais[idx].logo = novaUrl.trim();
+                renderizarListaMesclagem();
+            }
+        }
+
         function renderizarListaMesclagem() {
             const container = document.getElementById('listaCanaisMergeContainer');
             const busca = document.getElementById('searchMergeInput').value.toLowerCase();
@@ -732,25 +816,23 @@
                 contadorExibidos++;
                 const div = document.createElement('div');
                 div.className = 'merge-item';
-                let logoBannerHtml = item.logo ? `<img src="${item.logo}" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'">` : `<span style="font-size:9px; color:var(--text-muted);">LOGO</span>`;
+                let logoBannerHtml = item.logo ? `<img src="${item.logo}" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'">` : `<span style="font-size:8px; color:var(--text-muted);">LOGO</span>`;
 
                 div.innerHTML = `
                     <div class="merge-top-row">
                         <input type="checkbox" class="merge-checkbox" ${item.selected ? 'checked' : ''} onchange="atualizarEstadoMerge(${idx}, 'selected', this.checked)">
-                        <div style="width: 38px; height: 38px; background: #110e0c; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0; cursor: pointer;" onclick="abrirModalBuscaLogoParaMerge(${idx})" title="Alterar Logo">${logoBannerHtml}</div>
-                        <input type="text" class="merge-name-input" value="${item.title}" placeholder="Nome do Canal" oninput="atualizarEstadoMerge(${idx}, 'title', this.value)">
+                        <div style="width: 32px; height: 32px; background: #110e0c; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0; cursor: pointer;" onclick="alterarLogoRapidoMerge(${idx})" title="Colar nova logo">${logoBannerHtml}</div>
+                        <input type="text" class="merge-name-input" value="${item.title}" placeholder="Nome" oninput="atualizarEstadoMerge(${idx}, 'title', this.value)">
                     </div>
                     <div>
                         <input type="text" class="merge-url-input" value="${item.url}" placeholder="URL do Stream" oninput="atualizarEstadoMerge(${idx}, 'url', this.value)">
                     </div>
-                    <div>
-                        <div style="display: flex; gap: 6px;">
-                            <input type="text" class="merge-url-input" value="${item.logo}" placeholder="URL da Logo" oninput="atualizarEstadoMerge(${idx}, 'logo', this.value)" style="flex:1;">
-                            <button type="button" onclick="abrirModalBuscaLogoParaMerge(${idx})" style="background:#0ea5e9; border:none; color:white; padding:0 10px; border-radius:4px; font-size:12px; cursor:pointer;" title="Buscar Logo">🔍</button>
-                        </div>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" class="merge-url-input" value="${item.logo}" placeholder="URL da Logo" oninput="atualizarEstadoMerge(${idx}, 'logo', this.value)" style="flex:1;">
+                        <button type="button" onclick="alterarLogoRapidoMerge(${idx})" style="background:#0ea5e9; border:none; color:white; padding:0 8px; border-radius:4px; font-size:11px; cursor:pointer;" title="Colar Logo">✏️</button>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size:10px; color:var(--text-muted);">Categoria:</span>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="font-size:10px; color:var(--text-muted);">Cat:</span>
                         <select class="merge-cat-select" onchange="atualizarEstadoMerge(${idx}, 'group', this.value)">${optionsCatHtml}</select>
                     </div>
                 `;
@@ -817,6 +899,93 @@
             renderizarLista();
         }
 
+        function abrirModalNovaCategoria() {
+            document.getElementById('inputNovaCategoriaNome').value = '';
+            document.getElementById('modalNovaCategoria').style.display = 'flex';
+        }
+
+        function fecharModalNovaCategoria() {
+            document.getElementById('modalNovaCategoria').style.display = 'none';
+        }
+
+        function salvarNovaCategoria() {
+            const novaCat = document.getElementById('inputNovaCategoriaNome').value.trim();
+            if (!novaCat) { alert("Digite o nome."); return; }
+            if (categoriasList.map(c => c.toLowerCase()).includes(novaCat.toLowerCase())) { alert("Já existe."); return; }
+            categoriasList.push(novaCat);
+            categoriasList.sort();
+            fecharModalNovaCategoria();
+            renderizarAbasCategorias();
+            document.querySelectorAll('.cat-tabs .tab-btn').forEach(aba => {
+                if (aba.innerText.trim() === novaCat) filtrarCategoria(novaCat, aba);
+            });
+        }
+
+        function abrirModalGerenciarCategorias() {
+            renderizarListaGerenciarCategorias();
+            document.getElementById('modalGerenciarCategorias').style.display = 'flex';
+        }
+
+        function fecharModalGerenciarCategorias() {
+            document.getElementById('modalGerenciarCategorias').style.display = 'none';
+        }
+
+        function renderizarListaGerenciarCategorias() {
+            const container = document.getElementById('listaGerenciarCategoriasBody');
+            if (categoriasList.length === 0) {
+                container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding: 15px; font-size:12px;">Nenhuma categoria.</div>`;
+                return;
+            }
+            let html = '';
+            categoriasList.forEach((cat, idx) => {
+                html += `
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px; background: #110e0c; padding: 6px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        <input type="text" id="catNameInput_${idx}" value="${cat}" style="flex: 1; background: #1a1410; border: 1px solid var(--border-color); color: white; padding: 6px; border-radius: 4px; font-size: 12px;" />
+                        <button onclick="renomearCategoria(${idx})" style="background: #38bdf8; border: none; color: #000; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">Salvar</button>
+                        <button onclick="excluirCategoriaEspecifica('${cat.replace(/'/g, "\\'")}')" style="background: #dc2626; border: none; color: white; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 11px;">🗑️</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renomearCategoria(idx) {
+            const velhoNome = categoriasList[idx];
+            const inputVal = document.getElementById(`catNameInput_${idx}`).value.trim();
+            if (!inputVal) return;
+            if (velhoNome === inputVal) return;
+            categoriasList[idx] = inputVal;
+            categoriasList.sort();
+            canais.forEach(c => { if (c.group === velhoNome) c.group = inputVal; });
+            if (categoriaAtiva === velhoNome) categoriaAtiva = inputVal;
+            renderizarListaGerenciarCategorias();
+            extrairCategorias();
+            renderizarAbasCategorias();
+            renderizarLista();
+        }
+
+        function excluirCategoriaEspecifica(catNome) {
+            if (confirm(`Excluir categoria "${catNome}"?`)) {
+                categoriasList = categoriasList.filter(c => c !== catNome);
+                canais.forEach(c => { if (c.group === catNome) c.group = ""; });
+                if (categoriaAtiva === catNome) categoriaAtiva = "TODOS";
+                renderizarListaGerenciarCategorias();
+                extrairCategorias();
+                renderizarAbasCategorias();
+                renderizarLista();
+            }
+        }
+
+        function alterarLogoRapido(index, event) {
+            if(event) event.stopPropagation();
+            const canal = canais[index];
+            const novaUrl = prompt("Nova URL da logo para: " + canal.title, canal.logo || "");
+            if (novaUrl !== null) {
+                canal.logo = novaUrl.trim();
+                renderizarLista();
+            }
+        }
+
         function renderizarLista() {
             const container = document.getElementById('listaCanais');
             const busca = document.getElementById('searchInput').value.toLowerCase();
@@ -827,7 +996,7 @@
                 if (categoriaAtiva !== "TODOS" && canal.group !== categoriaAtiva) return;
                 if (busca && !canal.title.toLowerCase().includes(busca)) return;
                 count++;
-                let logoContent = canal.logo ? `<img src="${canal.logo}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;font-size:9px;">LOGO</span>` : `<span>TV</span>`;
+                let logoContent = canal.logo ? `<img src="${canal.logo}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;font-size:8px;">LOGO</span>` : `<span>TV</span>`;
                 let statusClass = canal.statusClass || 'status-unknown';
 
                 let blueClass = canal.swapState === 'blue' ? 'swap-circle blue-filled' : 'swap-circle blue-outline';
@@ -837,7 +1006,7 @@
                 card.className = 'channel-card';
                 card.innerHTML = `
                     <input type="checkbox" class="channel-checkbox" ${canal.selected ? 'checked' : ''} onchange="alternarSelecaoCanal(${index}, this.checked)">
-                    <div class="channel-logo" onclick="tocarVideo('${canal.url}')">${logoContent}</div>
+                    <div class="channel-logo" onclick="alterarLogoRapido(${index}, event)" title="Alterar logo">${logoContent}</div>
                     <div class="channel-details" onclick="tocarVideo('${canal.url}')">
                         <span class="channel-name"><span class="status-dot ${statusClass}"></span>${canal.title}</span>
                         <span class="channel-url">${canal.url}</span>
@@ -847,14 +1016,15 @@
                         </div>
                     </div>
                     <div class="swap-actions">
-                        <span class="${blueClass}" onclick="alternarBolinhaSwap(${index}, 'blue')" title="Mover para cima (Trocar)"></span>
-                        <span class="${redClass}" onclick="alternarBolinhaSwap(${index}, 'red')" title="Mover para baixo (Trocar)"></span>
+                        <span class="${blueClass}" onclick="alternarBolinhaSwap(${index}, 'blue')" title="Subir"></span>
+                        <span class="${redClass}" onclick="alternarBolinhaSwap(${index}, 'red')" title="Descer"></span>
                     </div>
                     <button class="more-options-btn" onclick="abrirActionSheet(${index})">⋮</button>
                 `;
                 container.appendChild(card);
             });
             document.getElementById('totalCanaisBadge').innerText = `${canais.length} canais`;
+            atualizarCheckboxGeralEstado();
         }
 
         function abrirActionSheet(index) {
@@ -870,7 +1040,7 @@
             if (acao === 'play') tocarVideo(canais[i].url);
             else if (acao === 'testarStatus') testarCanal(i);
             else if (acao === 'edit') abrirModalEdicao(i);
-            else if (acao === 'editLogo') abrirModalBuscaLogoParaIndex(i);
+            else if (acao === 'editLogo') alterarLogoRapido(i);
             else if (acao === 'editRaw') abrirModalRawEdit(i);
             else if (acao === 'posicao') {
                 let novaPos = prompt(`Mudar #${i+1} para a posição (1 a ${canais.length}):`, i + 1);
@@ -881,7 +1051,7 @@
                     }
                 }
             } else if (acao === 'remover') {
-                if (confirm("Deseja remover este canal?")) {
+                if (confirm("Remover canal?")) {
                     canais.splice(i, 1); extrairCategorias(); renderizarAbasCategorias(); renderizarLista(); atualizarBotaoBatchState(); atualizarContadorSwapVisual();
                 }
             }
@@ -897,23 +1067,16 @@
             document.getElementById('modalRawEdit').style.display = 'flex';
         }
 
-        function fecharModalRawEdit() {
-            document.getElementById('modalRawEdit').style.display = 'none';
-        }
+        function fecharModalRawEdit() { document.getElementById('modalRawEdit').style.display = 'none'; }
 
         function salvarRawEdit() {
             const index = document.getElementById('rawEditIndex').value;
             const textoRaw = document.getElementById('textareaRawContent').value.trim();
             const linhas = textoRaw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-
-            if (linhas.length < 2) {
-                alert("O formato RAW precisa conter pelo menos a linha #EXTINF e a URL do canal.");
-                return;
-            }
+            if (linhas.length < 2) return;
 
             let extinfLine = linhas[0];
             let urlLine = linhas[1];
-
             const groupMatch = extinfLine.match(/group-title="([^"]+)"/i);
             const logoMatch = extinfLine.match(/tvg-logo="([^"]+)"/i);
             const parts = extinfLine.split(',');
@@ -928,12 +1091,10 @@
                 swapState: '',
                 selected: canais[index].selected
             };
-
             fecharModalRawEdit();
             extrairCategorias();
             renderizarAbasCategorias();
             renderizarLista();
-            alert("Canal atualizado via RAW com sucesso!");
         }
 
         function atualizarSelectCategoriasModal() {
@@ -946,14 +1107,14 @@
         function atualizarPreviewInputLogo(url) {
             const container = document.getElementById('previewLogoContainer');
             if (!url || url.trim() === "") {
-                container.innerHTML = `<span style="font-size: 9px; color: var(--text-muted);">PREVIEW</span>`;
+                container.innerHTML = `<span style="font-size: 8px; color: var(--text-muted);">PREVIEW</span>`;
             } else {
                 container.innerHTML = `<img src="${url.trim()}" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.parentNode.innerHTML='<span style=\\'font-size: 8px; color: #ef4444;\\'>ERRO</span>'">`;
             }
         }
 
         function abrirModalEdicao(index) {
-            modoAdicaoNovo = false; indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
+            modoAdicaoNovo = false;
             document.getElementById('modalEditarTitulo').innerText = "Editar canal";
             atualizarSelectCategoriasModal();
             const canal = canais[index];
@@ -974,7 +1135,7 @@
             const url = document.getElementById('editUrl').value;
             const group = document.getElementById('editGroupSelect').value;
             const logo = document.getElementById('editLogo').value;
-            if (!nome || !url) { alert("Preencha Nome e URL."); return; }
+            if (!nome || !url) return;
 
             if (modoAdicaoNovo) canais.unshift({ title: nome, url: url, group: group, logo: logo, statusClass: 'status-unknown', swapState: '', selected: false });
             else {
@@ -985,7 +1146,7 @@
         }
 
         function abrirModalAdicionar() {
-            modoAdicaoNovo = true; indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
+            modoAdicaoNovo = true;
             document.getElementById('modalEditarTitulo').innerText = "Adicionar novo canal";
             atualizarSelectCategoriasModal();
             document.getElementById('editIndex').value = '';
@@ -995,78 +1156,6 @@
             document.getElementById('editLogo').value = '';
             atualizarPreviewInputLogo('');
             document.getElementById('modalEditar').style.display = 'flex';
-        }
-
-        function abrirModalBuscaLogo() {
-            indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
-            const nomeAtual = document.getElementById('editName').value || document.getElementById('playlistNameDisplay').innerText;
-            document.getElementById('inputTermoBuscaLogo').value = nomeAtual;
-            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Clique em Buscar para carregar imagens.</div>';
-            document.getElementById('modalBuscaLogo').style.display = 'flex';
-        }
-
-        function abrirModalBuscaLogoParaIndex(index) {
-            indexCanalEditandoLogoDireto = index; modoEdicaoLogoMergeIndex = null;
-            document.getElementById('inputTermoBuscaLogo').value = canais[index].title;
-            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando...</div>';
-            document.getElementById('modalBuscaLogo').style.display = 'flex';
-            executarBuscaLogoGoogle();
-        }
-
-        function abrirModalBuscaLogoParaMerge(idx) {
-            modoEdicaoLogoMergeIndex = idx; indexCanalEditandoLogoDireto = null;
-            document.getElementById('inputTermoBuscaLogo').value = tempMergeCanais[idx].title;
-            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando...</div>';
-            document.getElementById('modalBuscaLogo').style.display = 'flex';
-            executarBuscaLogoGoogle();
-        }
-
-        function fecharModalBuscaLogo() { document.getElementById('modalBuscaLogo').style.display = 'none'; }
-
-        async function executarBuscaLogoGoogle() {
-            const termo = document.getElementById('inputTermoBuscaLogo').value.trim();
-            const container = document.getElementById('containerResultadosLogo');
-            if (!termo) return;
-            container.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando imagens...</div>';
-
-            try {
-                const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(termo + ' channel logo png transparent')}&format=json`);
-                const data = await res.json();
-                container.innerHTML = '';
-                let imagensEncontradas = [];
-                if (data && data.RelatedTopics) {
-                    data.RelatedTopics.forEach(topic => { if (topic.Icon && topic.Icon.URL) imagensEncontradas.push(topic.Icon.URL); });
-                }
-                let termoLimpo = termo.toLowerCase().replace(/[^a-z0-9]/g, "");
-                let urlsSugeridas = [
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(termo)}&background=1f1814&color=38bdf8&size=128&bold=true`,
-                    `https://images.weserv.nl/?url=https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${termoLimpo}.com&size=128`
-                ];
-                urlsSugeridas.forEach(u => imagensEncontradas.push(u));
-
-                if (imagensEncontradas.length === 0) {
-                    container.innerHTML = '<div style="color: #ef4444; grid-column: 1/-1; text-align: center; font-size: 12px;">Nenhuma imagem direta encontrada.</div>';
-                    return;
-                }
-
-                imagensEncontradas.forEach(imgUrl => {
-                    const cardImg = document.createElement('div');
-                    cardImg.style.cssText = "background: #1a1410; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; height: 75px; cursor: pointer;";
-                    cardImg.innerHTML = `<img src="${imgUrl}" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.parentNode.style.display='none'">`;
-                    cardImg.onclick = () => {
-                        if (modoEdicaoLogoMergeIndex !== null) { tempMergeCanais[modoEdicaoLogoMergeIndex].logo = imgUrl; renderizarListaMesclagem(); modoEdicaoLogoMergeIndex = null; }
-                        else if (indexCanalEditandoLogoDireto !== null) { canais[indexCanalEditandoLogoDireto].logo = imgUrl; renderizarLista(); indexCanalEditandoLogoDireto = null; }
-                        else { 
-                            document.getElementById('editLogo').value = imgUrl; 
-                            atualizarPreviewInputLogo(imgUrl);
-                        }
-                        fecharModalBuscaLogo();
-                    };
-                    container.appendChild(cardImg);
-                });
-            } catch (err) {
-                container.innerHTML = '<div style="color: #ef4444; grid-column: 1/-1; text-align: center; font-size: 12px;">Erro ao buscar logotipos.</div>';
-            }
         }
 
         function tocarVideo(url) {
@@ -1107,30 +1196,24 @@
             document.body.removeChild(link);
         }
 
-        function abrirMenuGeral() {
-            document.getElementById('modalPainel').style.display = 'flex';
-        }
-
-        function fecharPainel() {
-            document.getElementById('modalPainel').style.display = 'none';
-        }
+        function abrirMenuGeral() { document.getElementById('modalPainel').style.display = 'flex'; }
+        function fecharPainel() { document.getElementById('modalPainel').style.display = 'none'; }
 
         function logSistema(mensagem) {
             const consoleDiv = document.getElementById('consoleStatus');
             consoleDiv.innerText = "> " + mensagem;
-            setTimeout(() => { consoleDiv.innerText += "\n> Concluído com sucesso."; }, 1500);
+            setTimeout(() => { consoleDiv.innerText += "\n> Concluído."; }, 1000);
         }
 
         function gerarTeste() {
             logSistema("Gerando link de teste 24h...");
-            setTimeout(() => { logSistema("Teste gerado: http://seu-servidor.tv/convidado/xyz987"); }, 1500);
+            setTimeout(() => { logSistema("Teste gerado com sucesso."); }, 1000);
         }
 
         async function testarCanal(index) {
             const url = canais[index].url;
             canais[index].statusClass = 'status-loading';
             renderizarLista();
-
             try {
                 await fetch(url, { method: 'HEAD', mode: 'no-cors' });
                 canais[index].statusClass = 'status-online';
