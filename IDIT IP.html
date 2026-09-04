@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IPTV Editor Pro - IDM Optimized</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+    :root {
+        --bg-main: #14100d;
+        --bg-card: #1f1814;
+        --bg-card-hover: #29201a;
+        --border-color: #33261e;
+        --accent: #38bdf8;
+        --text-main: #f3f4f6;
+        --text-muted: #9ca3af;
+        --badge-bg: #11362d;
+        --badge-text: #34d399;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-main); color: var(--text-main); margin: 0; padding: 0; padding-bottom: 90px; }
+    
+    .top-bar { background: #1a1410; padding: 12px 15px; border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .playlist-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+    
+    .top-icons { display: flex; gap: 20px; font-size: 20px; color: var(--text-muted); align-items: center; }
+    .top-icons span { padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .top-icons span:active { color: var(--accent); }
+    
+    .meta-badges { display: flex; gap: 8px; font-size: 11px; margin-bottom: 10px; align-items: center; flex-wrap: wrap; }
+    .badge-count { background: #1e3a4c; color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
+    .badge-type { background: #26211c; color: var(--text-muted); padding: 4px 10px; border-radius: 6px; }
+    .btn-merge { background: #8b5cf6; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .btn-auto-logo { background: #0ea5e9; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+
+    .cat-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+    .cat-tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 14px; border-radius: 20px; font-size: 12px; white-space: nowrap; cursor: pointer; }
+    .tab-btn.active { background: #1d4ed8; color: white; border-color: #2563eb; }
+
+    .search-box { padding: 10px 15px; background: #18120e; display: flex; gap: 10px; border-bottom: 1px solid var(--border-color); }
+    .search-box input { width: 100%; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-card); color: white; font-size: 14px; outline: none; }
+
+    .list-container { padding: 10px 15px; }
+    .channel-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; position: relative; }
+    .channel-logo { width: 48px; height: 48px; background: #110e0c; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border-color); cursor: pointer; }
+    .channel-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .channel-logo span { font-size: 10px; color: var(--text-muted); text-align: center; }
+    
+    .channel-details { flex-grow: 1; overflow: hidden; cursor: pointer; }
+    .channel-name { font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    .channel-url { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; margin-top: 2px; }
+    
+    .channel-footer-info { display: flex; gap: 6px; margin-top: 6px; align-items: center; }
+    .num-badge { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .group-badge { background: var(--badge-bg); color: var(--badge-text); font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+
+    .more-options-btn { background: transparent; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; padding: 8px; }
+
+    .fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: #38bdf8; color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.6); cursor: pointer; border: none; z-index: 90; font-weight: bold; }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { background: #1a1410; width: 95%; max-width: 650px; max-height: 90vh; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
+    .modal-header { padding: 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+    .modal-body { padding: 15px; overflow-y: auto; flex-grow: 1; }
+    .modal-footer { padding: 12px 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #15100d; }
+
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .form-group input, .form-group select { width: 100%; padding: 12px; background: #110e0c; border: 1px solid var(--border-color); color: white; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+
+    .merge-item { display: flex; flex-direction: column; gap: 6px; background: #14100d; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border-color); }
+    .merge-top-row { display: flex; align-items: center; gap: 8px; }
+    .merge-item input[type="checkbox"] { width: 20px; height: 20px; accent-color: #8b5cf6; cursor: pointer; flex-shrink: 0; }
+    .merge-name-input { flex-grow: 1; background: #110e0c; border: 1px solid var(--border-color); color: white; padding: 8px 10px; border-radius: 4px; font-size: 13px; font-weight: bold; outline: none; }
+    .merge-url-input { width: 100%; background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); padding: 8px; border-radius: 4px; font-size: 11px; outline: none; box-sizing: border-box; }
+    .merge-cat-select { background: #110e0c; border: 1px solid var(--border-color); color: var(--text-muted); font-size: 11px; padding: 6px; border-radius: 4px; flex-grow: 1; outline: none; }
+
+    #playerModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 15px; box-sizing: border-box; }
+    .player-wrapper { width: 100%; max-width: 700px; background: #000; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
+    video { width: 100%; max-height: 55vh; display: block; background: #000; }
+    .close-player-btn { margin-top: 15px; background: #ef4444; color: white; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+    .action-sheet { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #1a1410; border-top-left-radius: 16px; border-top-right-radius: 16px; border-top: 1px solid var(--border-color); z-index: 1500; max-height: 75vh; overflow-y: auto; }
+    .action-sheet-item { padding: 16px 20px; border-bottom: 1px solid #221b16; font-size: 15px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+    .action-sheet-item:active { background: #2a211c; }
+</style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-row">
+            <div class="playlist-title">
+                <span>📁</span> <span id="playlistNameDisplay">MinhaListaIPTV</span>
+            </div>
+            <div class="top-icons">
+                <span onclick="document.getElementById('fileInput').click()" title="Carregar Principal">📂</span>
+                <span onclick="exportarM3U()" title="Salvar / Exportar M3U">💾</span>
+                <span onclick="abrirMenuGeral()" title="Opções">⋮</span>
+            </div>
+        </div>
+        <input type="file" id="fileInput" accept=".m3u,.m3u8,text/plain" style="display:none;" onchange="processarArquivo(event)">
+        <input type="file" id="fileInputMerge" accept=".m3u,.m3u8,text/plain" style="display:none;" onchange="processarArquivoMesclagem(event)">
+
+        <div class="meta-badges">
+            <span class="badge-count" id="totalCanaisBadge">0 canais</span>
+            <span class="badge-type">M3U Pro</span>
+            <button class="btn-merge" onclick="dispararMesclagem()">🔗 Mesclar Lista</button>
+            <button class="btn-auto-logo" onclick="buscarLogosAutomaticas()">🔍 Auto Logos</button>
+        </div>
+
+        <div class="cat-tabs" id="catTabsContainer">
+            <div class="tab-btn active" onclick="filtrarCategoria('TODOS', this)">Todos</div>
+        </div>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Pesquisar canal na lista..." oninput="renderizarLista()">
+    </div>
+
+    <div class="list-container" id="listaCanais">
+        <div style="text-align:center; color: var(--text-muted); margin-top: 50px; font-size: 14px;">
+            Toque no ícone 📂 acima para carregar sua lista M3U.
+        </div>
+    </div>
+
+    <button class="fab" onclick="abrirModalAdicionar()">+</button>
+
+    <div id="playerModal">
+        <div class="player-wrapper">
+            <video id="videoPlayer" controls autoplay playsinline></video>
+        </div>
+        <button class="close-player-btn" onclick="fecharPlayer()">Fechar Vídeo</button>
+    </div>
+
+    <div class="modal" id="modalEditar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="modalEditarTitulo">Editar canal</span>
+                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalEdicao()">✕</span>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editIndex">
+                <div class="form-group">
+                    <label>Nome do Canal *</label>
+                    <input type="text" id="editName">
+                </div>
+                <div class="form-group">
+                    <label>URL do Stream *</label>
+                    <input type="text" id="editUrl">
+                </div>
+                <div class="form-group">
+                    <label>Grupo / Categoria (Soberano)</label>
+                    <select id="editGroupSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label>TVG Logo URL</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="editLogo" style="flex: 1;">
+                        <button type="button" onclick="abrirModalBuscaLogo()" style="background: #0ea5e9; border: none; color: white; padding: 0 14px; border-radius: 6px; cursor: pointer; font-size: 18px;" title="Buscar logo">🔍</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end;">
+                <button onclick="fecharModalEdicao()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Cancelar</button>
+                <button onclick="salvarEdicaoCanal()" style="background:#38bdf8; border:none; color:#000; font-weight:bold; padding:10px 16px; border-radius:6px; cursor:pointer;">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalBuscaLogo">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <span>🔍 Busca de Logos (Preview Instantâneo)</span>
+                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalBuscaLogo()">✕</span>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    <input type="text" id="inputTermoBuscaLogo" placeholder="Nome do canal..." style="flex: 1; padding: 10px; background: #110e0c; border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                    <button type="button" onclick="executarBuscaLogoGoogle()" style="background: #0ea5e9; border: none; color: white; padding: 0 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">Buscar</button>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Toque na imagem desejada para aplicá-la instantaneamente:</div>
+                <div id="containerResultadosLogo" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(95px, 1fr)); gap: 10px; max-height: 380px; overflow-y: auto; background: #110e0c; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); min-height: 140px; align-content: start;">
+                    <div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 45px; font-size: 12px;">Digite o termo e clique em buscar.</div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-end;">
+                <button onclick="fecharModalBuscaLogo()" style="background:#33261e; border:none; color:white; padding:10px 16px; border-radius:6px; cursor:pointer;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modalMesclar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Mesclagem de Listas (Soberana)</span>
+                <span style="cursor:pointer; font-size:20px;" onclick="fecharModalMesclar()">✕</span>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <input type="text" id="searchMergeInput" placeholder="Filtrar 2ª lista..." oninput="renderizarListaMesclagem()" style="flex:1; padding:10px; background:#110e0c; border:1px solid var(--border-color); color:white; border-radius:6px;">
+                    <button onclick="marcarTodosMerge(true)" style="background:#33261e; border:none; color:white; padding:8px 12px; border-radius:6px; font-size:11px; cursor:pointer;">Todos</button>
+                    <button onclick="marcarTodosMerge(false)" style="background:#33261e; border:none; color:white; padding:8px 12px; border-radius:6px; font-size:11px; cursor:pointer;">Nenhum</button>
+                </div>
+                <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;" id="mergeCountInfo">0 canais encontrados.</div>
+                <div id="listaCanaisMergeContainer" style="max-height: 50vh; overflow-y: auto;"></div>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 12px; color: var(--text-muted);" id="selecionadosCountText">0 selecionados</span>
+                <div style="display: flex; gap: 8px;">
+                    <button onclick="fecharModalMesclar()" style="background:#33261e; border:none; color:white; padding:10px 14px; border-radius:6px; cursor:pointer;">Cancelar</button>
+                    <button onclick="confirmarInsercaoMesclagem()" style="background:#8b5cf6; border:none; color:white; font-weight:bold; padding:10px 14px; border-radius:6px; cursor:pointer;">Adicionar Selecionados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-sheet" id="actionSheet">
+        <div style="padding: 12px; text-align:center; border-bottom: 1px solid var(--border-color); font-weight:bold; font-size:13px; color:var(--text-muted);" id="sheetChannelTitle">Opções do Canal</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('play')">▶ Reproduzir Canal (Preview)</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('edit')">✏️ Editar Informações</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('editLogo')">🖼️ Buscar / Alterar Logo</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('duplicar')">📋 Duplicar Canal</div>
+        <div class="action-sheet-item" onclick="executarAcaoSheet('posicao')">↕️ Mudar Posição na Lista</div>
+        <div class="action-sheet-item" style="color:#ef4444;" onclick="executarAcaoSheet('remover')">🗑️ Remover Canal</div>
+        <div class="action-sheet-item" onclick="fecharActionSheet()" style="justify-content:center; color:var(--text-muted);">Cancelar</div>
+    </div>
+
+    <script>
+        let canais = [];
+        let tempMergeCanais = [];
+        let categoriasList = [];
+        let categoriaAtiva = "TODOS";
+        let canalSelecionadoIndex = null;
+        let hlsInstance = null;
+        let modoAdicaoNovo = false;
+        let indexCanalEditandoLogoDireto = null;
+        let modoEdicaoLogoMergeIndex = null;
+
+        function processarArquivo(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            document.getElementById('playlistNameDisplay').innerText = file.name.replace(/\.[^/.]+$/, "");
+            const reader = new FileReader();
+            reader.onload = function(e) { parseM3UPrincipal(e.target.result); };
+            reader.readAsText(file);
+        }
+
+        function parseM3UPrincipal(text) {
+            canais = extrairArrayM3U(text);
+            extrairCategorias();
+            renderizarAbasCategorias();
+            renderizarLista();
+        }
+
+        function extrairArrayM3U(text) {
+            const linhas = text.split('\n');
+            let listaResultante = [];
+            let currentTitle = "Canal sem nome";
+            let currentGroup = "";
+            let currentLogo = "";
+
+            for (let i = 0; i < linhas.length; i++) {
+                let linha = linhas[i].trim();
+                if (linha.startsWith("#EXTINF:")) {
+                    const groupMatch = linha.match(/group-title="([^"]+)"/i);
+                    currentGroup = groupMatch ? groupMatch[1] : "";
+                    const logoMatch = linha.match(/tvg-logo="([^"]+)"/i);
+                    currentLogo = logoMatch ? logoMatch[1] : "";
+                    const parts = linha.split(',');
+                    currentTitle = parts.length > 1 ? parts[parts.length - 1].trim() : "Canal";
+                } else if (linha && !linha.startsWith("#")) {
+                    listaResultante.push({ title: currentTitle, url: linha, group: currentGroup, logo: currentLogo });
+                    currentTitle = "Canal sem nome"; currentGroup = ""; currentLogo = "";
+                }
+            }
+            return listaResultante;
+        }
+
+        function buscarLogosAutomaticas() {
+            if (canais.length === 0) { alert("Carrege uma lista primeiro!"); return; }
+            let preenchidos = 0;
+            const baseLogosConhecidas = {
+                "globo": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Rede_Globo_logo_2021.png",
+                "sbt": "https://upload.wikimedia.org/wikipedia/commons/4/44/SBT_logo_2023.png",
+                "record": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Record_TV_logo_2016.png",
+                "band": "https://upload.wikimedia.org/wikipedia/commons/b/b5/Band_logo_2018.png",
+                "redetv": "https://upload.wikimedia.org/wikipedia/commons/4/4d/RedeTV%21_logo_2019.png",
+                "cultura": "https://upload.wikimedia.org/wikipedia/commons/8/87/TV_Cultura_logo_2020.png",
+                "telecine": "https://upload.wikimedia.org/wikipedia/commons/6/63/Telecine_logo_2020.png",
+                "hbo": "https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg",
+                "tnt": "https://upload.wikimedia.org/wikipedia/commons/b/b3/TNT_logo_2016.png",
+                "espn": "https://upload.wikimedia.org/wikipedia/commons/a/a2/ESPN_wordmark.svg",
+                "sportv": "https://upload.wikimedia.org/wikipedia/commons/3/36/SporTV_logo_2020.png"
+            };
+
+            canais.forEach(canal => {
+                if (!canal.logo || canal.logo.trim() === "") {
+                    let nomeLimpo = canal.title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\b(hd|sd|fhd|4k|br|brasil|hevc|iptv|24h|online|canal)\b/g, "").replace(/[^a-z0-9]/g, " ").trim();
+                    let encontrou = false;
+                    for (let chave in baseLogosConhecidas) {
+                        if (nomeLimpo.includes(chave)) { canal.logo = baseLogosConhecidas[chave]; preenchidos++; encontrou = true; break; }
+                    }
+                    if (!encontrou) {
+                        let queryFormatada = encodeURIComponent(canal.title.replace(/[^a-zA-Z0-9 ]/g, "").trim());
+                        canal.logo = `https://ui-avatars.com/api/?name=${queryFormatada}&background=1f1814&color=38bdf8&size=128&bold=true`;
+                        preenchidos++;
+                    }
+                }
+            });
+            renderizarLista();
+            alert(`Processo concluído! Logos otimizadas em ${preenchidos} canais.`);
+        }
+
+        function dispararMesclagem() {
+            if (canais.length === 0) { alert("Carrege a lista principal primeiro!"); return; }
+            document.getElementById('fileInputMerge').click();
+        }
+
+        function processarArquivoMesclagem(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const brutos = extrairArrayM3U(e.target.result);
+                let fallbackCat = categoriasList.length > 0 ? categoriasList[0] : '';
+                tempMergeCanais = brutos.map(c => {
+                    let matchedCat = categoriasList.find(cat => cat.toLowerCase() === c.group.toLowerCase()) || fallbackCat;
+                    return { title: c.title, url: c.url, group: matchedCat, logo: c.logo || '', selected: false };
+                });
+                document.getElementById('searchMergeInput').value = '';
+                renderizarListaMesclagem();
+                document.getElementById('modalMesclar').style.display = 'flex';
+            };
+            reader.readAsText(file);
+        }
+
+        function renderizarListaMesclagem() {
+            const container = document.getElementById('listaCanaisMergeContainer');
+            const busca = document.getElementById('searchMergeInput').value.toLowerCase();
+            container.innerHTML = '';
+            let optionsCatHtml = '';
+            categoriasList.forEach(cat => { optionsCatHtml += `<option value="${cat}">${cat}</option>`; });
+            let contadorExibidos = 0;
+
+            tempMergeCanais.forEach((item, idx) => {
+                if (busca && !item.title.toLowerCase().includes(busca)) return;
+                contadorExibidos++;
+                const div = document.createElement('div');
+                div.className = 'merge-item';
+                let logoBannerHtml = item.logo ? `<img src="${item.logo}" style="width:100%; height:100%; object-fit:contain;" onerror="this.style.display='none'">` : `<span style="font-size:9px; color:var(--text-muted);">LOGO</span>`;
+
+                div.innerHTML = `
+                    <div class="merge-top-row">
+                        <input type="checkbox" class="merge-checkbox" ${item.selected ? 'checked' : ''} onchange="atualizarEstadoMerge(${idx}, 'selected', this.checked)">
+                        <div style="width: 38px; height: 38px; background: #110e0c; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-color); flex-shrink: 0; cursor: pointer;" onclick="abrirModalBuscaLogoParaMerge(${idx})" title="Alterar Logo">${logoBannerHtml}</div>
+                        <input type="text" class="merge-name-input" value="${item.title}" placeholder="Nome do Canal" oninput="atualizarEstadoMerge(${idx}, 'title', this.value)">
+                    </div>
+                    <div>
+                        <input type="text" class="merge-url-input" value="${item.url}" placeholder="URL do Stream" oninput="atualizarEstadoMerge(${idx}, 'url', this.value)">
+                    </div>
+                    <div>
+                        <div style="display: flex; gap: 6px;">
+                            <input type="text" class="merge-url-input" value="${item.logo}" placeholder="URL da Logo" oninput="atualizarEstadoMerge(${idx}, 'logo', this.value)" style="flex:1;">
+                            <button type="button" onclick="abrirModalBuscaLogoParaMerge(${idx})" style="background:#0ea5e9; border:none; color:white; padding:0 10px; border-radius:4px; font-size:12px; cursor:pointer;" title="Buscar Logo">🔍</button>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size:10px; color:var(--text-muted);">Categoria:</span>
+                        <select class="merge-cat-select" onchange="atualizarEstadoMerge(${idx}, 'group', this.value)">${optionsCatHtml}</select>
+                    </div>
+                `;
+                div.querySelector('select').value = item.group;
+                container.appendChild(div);
+            });
+            document.getElementById('mergeCountInfo').innerText = `${contadorExibidos} canais exibidos.`;
+            atualizarContadorSelecao();
+        }
+
+        function atualizarEstadoMerge(idx, campo, valor) {
+            tempMergeCanais[idx][campo] = valor;
+            if (campo === 'selected') atualizarContadorSelecao();
+            if (campo === 'logo') renderizarListaMesclagem();
+        }
+
+        function marcarTodosMerge(marcar) {
+            const busca = document.getElementById('searchMergeInput').value.toLowerCase();
+            tempMergeCanais.forEach(item => {
+                if (!busca || item.title.toLowerCase().includes(busca)) item.selected = marcar;
+            });
+            renderizarListaMesclagem();
+        }
+
+        function atualizarContadorSelecao() {
+            const sel = tempMergeCanais.filter(i => i.selected).length;
+            document.getElementById('selecionadosCountText').innerText = `${sel} selecionados`;
+        }
+
+        function fecharModalMesclar() { document.getElementById('modalMesclar').style.display = 'none'; }
+
+        function confirmarInsercaoMesclagem() {
+            const selecionados = tempMergeCanais.filter(i => i.selected);
+            if (selecionados.length === 0) { alert("Nenhum canal selecionado!"); return; }
+            selecionados.forEach(item => { canais.push({ title: item.title, url: item.url, group: item.group, logo: item.logo }); });
+            fecharModalMesclar();
+            renderizarAbasCategorias();
+            renderizarLista();
+            alert(`${selecionados.length} canais mesclados com sucesso!`);
+        }
+
+        function extrairCategorias() {
+            const cats = new Set();
+            canais.forEach(c => { if (c.group && c.group.trim() !== "") cats.add(c.group); });
+            categoriasList = Array.from(cats).sort();
+        }
+
+        function renderizarAbasCategorias() {
+            const container = document.getElementById('catTabsContainer');
+            let html = `<div class="tab-btn ${categoriaAtiva === 'TODOS' ? 'active' : ''}" onclick="filtrarCategoria('TODOS', this)">Todos</div>`;
+            categoriasList.forEach(cat => {
+                let active = categoriaAtiva === cat ? 'active' : '';
+                html += `<div class="tab-btn ${active}" onclick="filtrarCategoria('${cat.replace(/'/g, "\\'")}', this)">${cat}</div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function filtrarCategoria(cat, elemento) {
+            categoriaAtiva = cat;
+            document.querySelectorAll('.cat-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+            elemento.classList.add('active');
+            renderizarLista();
+        }
+
+        function renderizarLista() {
+            const container = document.getElementById('listaCanais');
+            const busca = document.getElementById('searchInput').value.toLowerCase();
+            container.innerHTML = '';
+            let count = 0;
+
+            canais.forEach((canal, index) => {
+                if (categoriaAtiva !== "TODOS" && canal.group !== categoriaAtiva) return;
+                if (busca && !canal.title.toLowerCase().includes(busca)) return;
+                count++;
+                let logoContent = canal.logo ? `<img src="${canal.logo}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;font-size:9px;">LOGO</span>` : `<span>TV</span>`;
+
+                const card = document.createElement('div');
+                card.className = 'channel-card';
+                card.innerHTML = `
+                    <div class="channel-logo" onclick="tocarVideo('${canal.url}')">${logoContent}</div>
+                    <div class="channel-details" onclick="tocarVideo('${canal.url}')">
+                        <span class="channel-name">${canal.title}</span>
+                        <span class="channel-url">${canal.url}</span>
+                        <div class="channel-footer-info">
+                            <span class="num-badge">#${index + 1}</span>
+                            <span class="group-badge">${canal.group}</span>
+                        </div>
+                    </div>
+                    <button class="more-options-btn" onclick="abrirActionSheet(${index})">⋮</button>
+                `;
+                container.appendChild(card);
+            });
+            document.getElementById('totalCanaisBadge').innerText = `${canais.length} canais`;
+        }
+
+        function abrirActionSheet(index) {
+            canalSelecionadoIndex = index;
+            document.getElementById('sheetChannelTitle').innerText = canais[index].title;
+            document.getElementById('actionSheet').style.display = 'block';
+        }
+        function fecharActionSheet() { document.getElementById('actionSheet').style.display = 'none'; }
+
+        function executarAcaoSheet(acao) {
+            const i = canalSelecionadoIndex;
+            fecharActionSheet();
+            if (acao === 'play') tocarVideo(canais[i].url);
+            else if (acao === 'edit') abrirModalEdicao(i);
+            else if (acao === 'editLogo') abrirModalBuscaLogoParaIndex(i);
+            else if (acao === 'duplicar') {
+                let copia = { ...canais[i] }; copia.title += " (Cópia)";
+                canais.splice(i + 1, 0, copia); renderizarLista();
+            } else if (acao === 'posicao') {
+                let novaPos = prompt(`Mudar #${i+1} para a posição (1 a ${canais.length}):`, i + 1);
+                if (novaPos !== null) {
+                    let target = parseInt(novaPos) - 1;
+                    if (target >= 0 && target < canais.length) {
+                        let item = canais.splice(i, 1)[0]; canais.splice(target, 0, item); renderizarLista();
+                    }
+                }
+            } else if (acao === 'remover') {
+                if (confirm("Deseja remover este canal?")) {
+                    canais.splice(i, 1); extrairCategorias(); renderizarAbasCategorias(); renderizarLista();
+                }
+            }
+        }
+
+        function atualizarSelectCategoriasModal() {
+            const select = document.getElementById('editGroupSelect');
+            let html = '';
+            categoriasList.forEach(cat => { html += `<option value="${cat}">${cat}</option>`; });
+            select.innerHTML = html;
+        }
+
+        function abrirModalEdicao(index) {
+            modoAdicaoNovo = false; indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
+            document.getElementById('modalEditarTitulo').innerText = "Editar canal";
+            atualizarSelectCategoriasModal();
+            const canal = canais[index];
+            document.getElementById('editIndex').value = index;
+            document.getElementById('editName').value = canal.title;
+            document.getElementById('editUrl').value = canal.url;
+            document.getElementById('editGroupSelect').value = canal.group;
+            document.getElementById('editLogo').value = canal.logo || '';
+            document.getElementById('modalEditar').style.display = 'flex';
+        }
+
+        function fecharModalEdicao() { document.getElementById('modalEditar').style.display = 'none'; }
+
+        function salvarEdicaoCanal() {
+            const nome = document.getElementById('editName').value;
+            const url = document.getElementById('editUrl').value;
+            const group = document.getElementById('editGroupSelect').value;
+            const logo = document.getElementById('editLogo').value;
+            if (!nome || !url) { alert("Preencha Nome e URL."); return; }
+
+            if (modoAdicaoNovo) canais.unshift({ title: nome, url: url, group: group, logo: logo });
+            else {
+                const idx = document.getElementById('editIndex').value;
+                canais[idx].title = nome; canais[idx].url = url; canais[idx].group = group; canais[idx].logo = logo;
+            }
+            fecharModalEdicao(); extrairCategorias(); renderizarAbasCategorias(); renderizarLista();
+        }
+
+        function abrirModalAdicionar() {
+            modoAdicaoNovo = true; indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
+            document.getElementById('modalEditarTitulo').innerText = "Adicionar novo canal";
+            atualizarSelectCategoriasModal();
+            document.getElementById('editIndex').value = '';
+            document.getElementById('editName').value = '';
+            document.getElementById('editUrl').value = '';
+            if(categoriasList.length > 0) document.getElementById('editGroupSelect').value = categoriaAtiva !== 'TODOS' ? categoriaAtiva : categoriasList[0];
+            document.getElementById('editLogo').value = '';
+            document.getElementById('modalEditar').style.display = 'flex';
+        }
+
+        function abrirModalBuscaLogo() {
+            indexCanalEditandoLogoDireto = null; modoEdicaoLogoMergeIndex = null;
+            const nomeAtual = document.getElementById('editName').value || document.getElementById('playlistNameDisplay').innerText;
+            document.getElementById('inputTermoBuscaLogo').value = nomeAtual;
+            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Clique em Buscar para carregar imagens.</div>';
+            document.getElementById('modalBuscaLogo').style.display = 'flex';
+        }
+
+        function abrirModalBuscaLogoParaIndex(index) {
+            indexCanalEditandoLogoDireto = index; modoEdicaoLogoMergeIndex = null;
+            document.getElementById('inputTermoBuscaLogo').value = canais[index].title;
+            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando...</div>';
+            document.getElementById('modalBuscaLogo').style.display = 'flex';
+            executarBuscaLogoGoogle();
+        }
+
+        function abrirModalBuscaLogoParaMerge(idx) {
+            modoEdicaoLogoMergeIndex = idx; indexCanalEditandoLogoDireto = null;
+            document.getElementById('inputTermoBuscaLogo').value = tempMergeCanais[idx].title;
+            document.getElementById('containerResultadosLogo').innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando...</div>';
+            document.getElementById('modalBuscaLogo').style.display = 'flex';
+            executarBuscaLogoGoogle();
+        }
+
+        function fecharModalBuscaLogo() { document.getElementById('modalBuscaLogo').style.display = 'none'; }
+
+        async function executarBuscaLogoGoogle() {
+            const termo = document.getElementById('inputTermoBuscaLogo').value.trim();
+            const container = document.getElementById('containerResultadosLogo');
+            if (!termo) return;
+            container.innerHTML = '<div style="color: var(--text-muted); grid-column: 1/-1; text-align: center; margin-top: 40px; font-size: 12px;">Buscando imagens...</div>';
+
+            try {
+                const res = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(termo + ' channel logo png transparent')}&format=json`);
+                const data = await res.json();
+                container.innerHTML = '';
+                let imagensEncontradas = [];
+                if (data && data.RelatedTopics) {
+                    data.RelatedTopics.forEach(topic => { if (topic.Icon && topic.Icon.URL) imagensEncontradas.push(topic.Icon.URL); });
+                }
+                let termoLimpo = termo.toLowerCase().replace(/[^a-z0-9]/g, "");
+                let urlsSugeridas = [
+                    `https://ui-avatars.com/api/?name=${encodeURIComponent(termo)}&background=1f1814&color=38bdf8&size=128&bold=true`,
+                    `https://images.weserv.nl/?url=https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://${termoLimpo}.com&size=128`
+                ];
+                urlsSugeridas.forEach(u => imagensEncontradas.push(u));
+
+                if (imagensEncontradas.length === 0) {
+                    container.innerHTML = '<div style="color: #ef4444; grid-column: 1/-1; text-align: center; font-size: 12px;">Nenhuma imagem direta encontrada.</div>';
+                    return;
+                }
+
+                imagensEncontradas.forEach(imgUrl => {
+                    const cardImg = document.createElement('div');
+                    cardImg.style.cssText = "background: #1a1410; border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; height: 75px; cursor: pointer;";
+                    cardImg.innerHTML = `<img src="${imgUrl}" style="max-width: 100%; max-height: 100%; object-fit: contain;" onerror="this.parentNode.style.display='none'">`;
+                    cardImg.onclick = () => {
+                        if (modoEdicaoLogoMergeIndex !== null) { tempMergeCanais[modoEdicaoLogoMergeIndex].logo = imgUrl; renderizarListaMesclagem(); modoEdicaoLogoMergeIndex = null; }
+                        else if (indexCanalEditandoLogoDireto !== null) { canais[indexCanalEditandoLogoDireto].logo = imgUrl; renderizarLista(); indexCanalEditandoLogoDireto = null; }
+                        else { document.getElementById('editLogo').value = imgUrl; }
+                        fecharModalBuscaLogo();
+                    };
+                    container.appendChild(cardImg);
+                });
+            } catch (err) {
+                container.innerHTML = '<div style="color: #ef4444; grid-column: 1/-1; text-align: center; font-size: 12px;">Erro ao buscar logotipos.</div>';
+            }
+        }
+
+        function tocarVideo(url) {
+            const modal = document.getElementById('playerModal');
+            const video = document.getElementById('videoPlayer');
+            modal.style.display = 'flex';
+            if (Hls.isSupported() && url.includes('.m3u8')) {
+                if(hlsInstance) hlsInstance.destroy();
+                hlsInstance = new Hls();
+                hlsInstance.loadSource(url);
+                hlsInstance.attachMedia(video);
+                hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+            } else { video.src = url; video.play(); }
+        }
+
+        function fecharPlayer() {
+            const modal = document.getElementById('playerModal');
+            const video = document.getElementById('videoPlayer');
+            video.pause(); video.removeAttribute('src'); video.load();
+            if(hlsInstance) hlsInstance.destroy();
+            modal.style.display = 'none';
+        }
+
+        function exportarM3U() {
+            if (canais.length === 0) { alert("Lista vazia!"); return; }
+            let conteudo = "#EXTM3U\n";
+            canais.forEach(c => {
+                let logoStr = c.logo ? ` tvg-logo="${c.logo}"` : '';
+                let groupStr = c.group ? ` group-title="${c.group}"` : '';
+                conteudo += `#EXTINF:-1${logoStr}${groupStr},${c.title}\n${c.url}\n`;
+            });
+            const blob = new Blob([conteudo], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'ListaIPTVSoberana_Pro.m3u';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function abrirMenuGeral() { alert("Painel M3U Pro: Estrutura e categorias principais preservadas com robustez."); }
+    </script>
+</body>
+</html>
