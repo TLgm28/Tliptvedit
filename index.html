@@ -161,6 +161,8 @@
                 <input type="text" id="searchInput" placeholder="Pesquisar canal..." oninput="renderizarLista()">
                 <button id="btnBatchActions" class="btn-batch-actions" onclick="abrirMenuAcoesLote()">⚙️ (<span id="batchCountNum">0</span>)</button>
                 <button class="btn-batch-actions" onclick="abrirEdicaoRawSelecionados()" title="Edição RAW" style="background:#0369a1; color:white; border-color:#0284c7;">💻 RAW</button>
+                <!-- Botão de Auto-Match de Logos do GitHub integrado -->
+                <button class="btn-batch-actions" onclick="autoMatchLogosGitHub()" title="Auto-Match de Logos do GitHub" style="background:#10b981; color:white; border-color:#059669;">✨ Auto-Logo</button>
             </div>
             <div class="search-row-2">
                 <div class="swap-group">
@@ -379,6 +381,28 @@
         let canalSelecionadoIndex = null;
         let hlsInstance = null;
         let modoAdicaoNovo = false;
+
+        // Função de Auto-Match de Logos baseada no GitHub Pages
+        function autoMatchLogosGitHub() {
+            let baseURL = prompt("Confirme ou ajuste a URL base da sua pasta de logos no GitHub:", "https://tligm28.github.io/1/logos/");
+            if (!baseURL) return;
+
+            let count = 0;
+            canais.forEach(canal => {
+                let nomeLimpo = canal.title
+                    .toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9]/g, "_")
+                    .replace(/_+/g, "_")
+                    .replace(/^_|_$/g, "");
+
+                canal.logo = `${baseURL}${nomeLimpo}.png`;
+                count++;
+            });
+
+            renderizarLista();
+            alert(`Auto-match concluído! ${count} canais atualizaram as URLs de logo com base nos nomes.`);
+        }
 
         function alternarSelecaoCanal(index, estado) {
             canais[index].selected = estado;
