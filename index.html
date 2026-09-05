@@ -1281,46 +1281,61 @@
             document.getElementById('modalAutoLogo').style.display = 'none';
         }
 
+        // NOVA FUNÇÃO: Faz o parse inteligente para extrair dados se o link for do GitHub
+        function parseGithubInfo(url) {
+            let ghRegex = /(?:github\.com\/([^\/]+)\/([^\/]+)\/(?:tree|blob)\/([^\/]+)\/(.*))|(?:raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.*))/;
+            let match = url.trim().match(ghRegex);
+            if (match) {
+                if (match[1]) return { user: match[1], repo: match[2], branch: match[3], path: match[4] || '' };
+                else return { user: match[5], repo: match[6], branch: match[7], path: match[8] || '' };
+            }
+            return null;
+        }
+
         function gerarCandidatosLogo(titulo) {
             if (!titulo) return [];
             let candidatos = new Set();
             
-            // 1. Nome exato e codificado URL (preservando espaços e letras maiúsculas/minúsculas)
-            ['.png', '.jpg', '.webp'].forEach(ext => {
-                candidatos.add(titulo + ext);
-                candidatos.add(encodeURIComponent(titulo) + ext);
-            });
-
-            // 2. Sem espaços, mantendo o case original (ex: "Tv Max" -> "TvMax.png")
-            let semEspacosOrig = titulo.replace(/\s+/g, "");
-            ['.png', '.jpg', '.webp'].forEach(ext => {
-                candidatos.add(semEspacosOrig + ext);
-                candidatos.add(encodeURIComponent(semEspacosOrig) + ext);
-            });
-
-            // 3. Normalizado sem acentos (ex: "Tvitapê" -> "Tvitape")
             let limpo = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            let semEspacosOrig = titulo.replace(/\s+/g, "");
             let semEspacosLimpo = limpo.replace(/\s+/g, "");
-            ['.png', '.jpg', '.webp'].forEach(ext => {
-                candidatos.add(limpo + ext);
-                candidatos.add(encodeURIComponent(limpo) + ext);
-                candidatos.add(limpo.toLowerCase() + ext);
-                candidatos.add(semEspacosLimpo + ext);
-                candidatos.add(semEspacosLimpo.toLowerCase() + ext);
-            });
+            
+            const addExts = (nome) => {
+                ['.png', '.jpg', '.webp'].forEach(ext => {
+                    candidatos.add(nome + ext);
+                    candidatos.add(encodeURIComponent(nome) + ext);
+                });
+            };
 
-            // 4. Variações com hífen e underline (minúsculas e originais)
+            // 1. Exato e Case original
+            addExts(titulo);
+
+            // 2. Title Case (ex: "TV Itape" vira "Tv Itape") e Primeira Maiúscula
+            let titleCase = titulo.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            let firstCap = titulo.charAt(0).toUpperCase() + titulo.slice(1).toLowerCase();
+            addExts(titleCase);
+            addExts(firstCap);
+
+            // 3. Sem espaços originais
+            addExts(semEspacosOrig);
+            addExts(titleCase.replace(/\s+/g, ""));
+
+            // 4. Limpo (sem acento algum)
+            addExts(limpo);
+            addExts(limpo.toLowerCase());
+            addExts(semEspacosLimpo);
+            addExts(semEspacosLimpo.toLowerCase());
+            
+            // 5. Title Case Limpo (sem acento mas com primeiras letras maiúsculas)
+            let titleCaseLimpo = limpo.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            addExts(titleCaseLimpo);
+            addExts(titleCaseLimpo.replace(/\s+/g, ""));
+
+            // 6. Variações com hífen e underline para o nome limpo
             let hLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-            let hOrig = limpo.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
             let uLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
-            let uOrig = limpo.replace(/[^a-zA-Z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
-
-            ['.png', '.jpg', '.webp'].forEach(ext => {
-                candidatos.add(hLower + ext);
-                candidatos.add(hOrig + ext);
-                candidatos.add(uLower + ext);
-                candidatos.add(uOrig + ext);
-            });
+            addExts(hLower);
+            addExts(uLower);
 
             return Array.from(candidatos);
         }
@@ -1340,7 +1355,6 @@
                 alert("Informe a URL base do GitHub.");
                 return;
             }
-            if (!baseUrl.endsWith('/')) baseUrl += '/';
 
             const escopo = document.getElementById('autoLogoEscopo').value;
             const consoleBox = document.getElementById('autoLogoConsole');
@@ -1364,18 +1378,68 @@
             let encontrados = 0;
             let ignorados = 0;
 
+            // ADIÇÃO CIRÚRGICA: INTEGRAÇÃO API GITHUB
+            // Isso previne fazer testes cegos caso a URL seja do Github. 
+            // Ele puxa a lista da pasta inteira, remove acentos, espaços e maiúsculas de TUDO e liga perfeitamente.
+            let githubFiles = [];
+            let githubMode = false;
+            const ghInfo = parseGithubInfo(baseUrl);
+            
+            if (ghInfo) {
+                consoleBox.innerText = "Consultando árvore do GitHub para mapeamento de precisão (ignora acentos, espaços e maiúsculas)...";
+                try {
+                    let apiPath = ghInfo.path.replace(/\/+$/, "");
+                    let apiUrl = `https://api.github.com/repos/${ghInfo.user}/${ghInfo.repo}/contents/${apiPath}?ref=${ghInfo.branch}`;
+                    let resp = await fetch(apiUrl);
+                    if (resp.ok) {
+                        let data = await resp.json();
+                        if (Array.isArray(data)) {
+                            githubFiles = data.filter(item => item.type === 'file' && item.name.match(/\.(png|jpg|jpeg|webp)$/i));
+                            githubMode = true;
+                            consoleBox.innerText = `Encontrados ${githubFiles.length} arquivos de logo no repositório. Processando canais...`;
+                        }
+                    }
+                } catch(e) {
+                    console.warn("Falha na API GitHub, usando modo de permutações (força bruta).", e);
+                }
+            }
+
+            if (!baseUrl.endsWith('/')) baseUrl += '/';
+
             for (let i = 0; i < alvos.length; i++) {
                 let canal = alvos[i];
                 consoleBox.innerText = `Testando (${i+1}/${alvos.length}): ${canal.title}...`;
                 
-                let candidatos = gerarCandidatosLogo(canal.title);
                 let logoEncontrada = null;
 
-                for (let candidato of candidatos) {
-                    let testUrl = baseUrl + candidato;
-                    if (await testarImagemExiste(testUrl)) {
-                        logoEncontrada = testUrl;
-                        break;
+                // 1. TENTATIVA INTELIGENTE VIA GITHUB (Se aplicável)
+                if (githubMode) {
+                    // Normaliza canal: tudo minúsculo, sem nenhum espaço, sem nenhum acento e sem caracteres especiais
+                    let canalNorm = canal.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+                    
+                    let matchInfo = githubFiles.find(f => {
+                        // Faz o mesmo para o nome do arquivo que está hospedado
+                        let fNameNorm = f.name.replace(/\.[^/.]+$/, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+                        return fNameNorm === canalNorm;
+                    });
+
+                    if (matchInfo) {
+                        // Se bateu exatamente na normalização (Ex: 'TV Itape' == 'Tvitapê'), remonta a raw URL original correta.
+                        let rawPath = ghInfo.path.replace(/\/+$/, "");
+                        if(rawPath) rawPath += "/";
+                        logoEncontrada = `https://raw.githubusercontent.com/${ghInfo.user}/${ghInfo.repo}/${ghInfo.branch}/${rawPath}${encodeURIComponent(matchInfo.name)}`;
+                    }
+                }
+
+                // 2. FALLBACK (Caso não seja GitHub ou a API tenha falhado)
+                if (!logoEncontrada) {
+                    let candidatos = gerarCandidatosLogo(canal.title);
+                    for (let candidato of candidatos) {
+                        let testUrl = baseUrl + candidato;
+                        if (await testarImagemExiste(testUrl)) {
+                            logoEncontrada = testUrl;
+                            break;
+                        }
                     }
                 }
 
