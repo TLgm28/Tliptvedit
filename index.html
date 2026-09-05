@@ -309,7 +309,7 @@
                 <div class="form-group">
                     <label>URL Base do GitHub (Raw / Pasta de Logos)</label>
                     <input type="text" id="autoLogoBaseUrl" placeholder="Ex: https://raw.githubusercontent.com/usuario/repo/main/logos/">
-                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testará o nome do canal limpo + .png / .jpg. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado (nem apagado).</div>
+                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testará automaticamente variações inteligentes (maiúsculas, minúsculas, espaços e nomes juntos) com extensões .png, .jpg e .webp. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado.</div>
                 </div>
                 <div class="form-group">
                     <label>Escopo do Scan</label>
@@ -1272,7 +1272,7 @@
             renderizarLista();
         }
 
-        // --- SISTEMA DE AUTO-LOGO SCAN (COM REGRA DE OURO) ---
+        // --- SISTEMA DE AUTO-LOGO SCAN INTELIGENTE (COM REGRA DE OURO) ---
         function abrirModalAutoLogo() {
             document.getElementById('modalAutoLogo').style.display = 'flex';
         }
@@ -1281,13 +1281,57 @@
             document.getElementById('modalAutoLogo').style.display = 'none';
         }
 
-        function normalizarNomeParaLogo(nome) {
-            return nome
-                .toLowerCase()
-                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .replace(/[^a-z0-9]/g, "-")
-                .replace(/-+/g, "-")
-                .replace(/^-|-$/g, "");
+        function gerarCandidatosLogo(titulo) {
+            if (!titulo) return [];
+            let limpo = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            let candidatos = new Set();
+            
+            // 1. Minúsculas com hífen (ex: rede-premium-tv)
+            let hLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+            if (hLower) {
+                candidatos.add(hLower + '.png');
+                candidatos.add(hLower + '.jpg');
+                candidatos.add(hLower + '.webp');
+            }
+            
+            // 2. Minúsculas com underline (ex: rede_premium_tv)
+            let uLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
+            if (uLower) {
+                candidatos.add(uLower + '.png');
+                candidatos.add(uLower + '.jpg');
+                candidatos.add(uLower + '.webp');
+            }
+            
+            // 3. Tudo junto minúsculas (ex: redepremiumtv)
+            let jLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "");
+            if (jLower) {
+                candidatos.add(jLower + '.png');
+                candidatos.add(jLower + '.jpg');
+                candidatos.add(jLower + '.webp');
+            }
+            
+            // 4. Case original com hífen
+            let hOrig = limpo.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+            if (hOrig) {
+                candidatos.add(hOrig + '.png');
+                candidatos.add(hOrig + '.jpg');
+                candidatos.add(hOrig + '.webp');
+            }
+            
+            // 5. Case original tudo junto
+            let jOrig = limpo.replace(/[^a-zA-Z0-9]/g, "");
+            if (jOrig) {
+                candidatos.add(jOrig + '.png');
+                candidatos.add(jOrig + '.jpg');
+                candidatos.add(jOrig + '.webp');
+            }
+            
+            // 6. Título codificado exato
+            candidatos.add(encodeURIComponent(titulo) + '.png');
+            candidatos.add(encodeURIComponent(titulo) + '.jpg');
+            candidatos.add(encodeURIComponent(titulo) + '.webp');
+
+            return Array.from(candidatos);
         }
 
         function testarImagemExiste(url) {
@@ -1310,7 +1354,7 @@
             const escopo = document.getElementById('autoLogoEscopo').value;
             const consoleBox = document.getElementById('autoLogoConsole');
             consoleBox.style.display = 'block';
-            consoleBox.innerText = "Iniciando varredura de logos...";
+            consoleBox.innerText = "Iniciando varredura inteligente de logos...";
 
             let alvos = [];
             if (escopo === 'todos') {
@@ -1333,27 +1377,22 @@
                 let canal = alvos[i];
                 consoleBox.innerText = `Testando (${i+1}/${alvos.length}): ${canal.title}...`;
                 
-                let nomeClean = normalizarNomeParaLogo(canal.title);
-                let urlTeste1 = baseUrl + nomeClean + '.png';
-                let urlTeste2 = baseUrl + nomeClean + '.jpg';
-                let urlTeste3 = baseUrl + encodeURIComponent(canal.title) + '.png';
-
+                let candidatos = gerarCandidatosLogo(canal.title);
                 let logoEncontrada = null;
 
-                if (await testarImagemExiste(urlTeste1)) {
-                    logoEncontrada = urlTeste1;
-                } else if (await testarImagemExiste(urlTeste2)) {
-                    logoEncontrada = urlTeste2;
-                } else if (await testarImagemExiste(urlTeste3)) {
-                    logoEncontrada = urlTeste3;
+                for (let candidato of candidatos) {
+                    let testUrl = baseUrl + candidato;
+                    if (await testarImagemExiste(testUrl)) {
+                        logoEncontrada = testUrl;
+                        break;
+                    }
                 }
 
                 if (logoEncontrada) {
-                    // Se encontrou na biblioteca do GitHub, atualiza/adiciona o logo
                     canal.logo = logoEncontrada;
                     encontrados++;
                 } else {
-                    // REGRA DE OURO: Se NÃO for encontrado na biblioteca do GitHub, ele ignora e NÃODD altera o logo que já está no canal (mantém intacto).
+                    // REGRA DE OURO: Mantém intacto se não encontrar
                     ignorados++;
                 }
             }
