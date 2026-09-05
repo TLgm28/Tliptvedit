@@ -328,6 +328,14 @@
                 <span style="cursor:pointer; font-size:18px;" onclick="fecharPainel()">✕</span>
             </div>
             <div class="modal-body" style="background: #14100d;">
+                
+                <div class="panel-card">
+                    <h3>Cache Local (Backup de Edição)</h3>
+                    <button class="btn-red" style="background:#0ea5e9;" onclick="salvarCacheDB()">💾 Salvar Edição Atual no Cache</button>
+                    <button class="btn-dark" onclick="carregarCacheDB()">📂 Carregar Último Cache Salvo</button>
+                    <div style="font-size:10px; color:var(--text-muted); margin-top:5px;">Ideal para não perder o progresso caso você precise voltar mais tarde.</div>
+                </div>
+
                 <div class="panel-card">
                     <h3>Gerenciamento de Lista</h3>
                     <button class="btn-red" onclick="excluirListaAtual(); fecharPainel();">🗑️ Excluir Lista Atual e Carregar Outra</button>
@@ -335,7 +343,7 @@
                 <div class="panel-card">
                     <h3>Sincronização de Conteúdo</h3>
                     <button class="btn-red" onclick="logSistema('Iniciando Rescan Rápido (Atualizar M3U)...')">Rescan Rápido (Atualizar M3U)</button>
-                    <button class="btn-dark" onclick="logSistema('Limpando cache do sistema...')">Limpeza Total do Cache</button>
+                    <button class="btn-dark" onclick="limparCacheDBTotal()">Limpeza Total do Cache</button>
                 </div>
                 <div class="panel-card">
                     <h3>Gerar Teste Temporário (24h)</h3>
@@ -1231,6 +1239,99 @@
             }
             renderizarLista();
         }
+
+        // --- SISTEMA DE CACHE CIRÚRGICO (INDEXEDDB PARA LISTAS GRANDES) ---
+        const dbName = "IPTVEditorDB";
+        const storeName = "cacheStore";
+
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName);
+                    }
+                };
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function salvarCacheDB() {
+            if(canais.length === 0) {
+                alert("A lista está vazia. Carregue uma lista antes de salvar no cache.");
+                return;
+            }
+            logSistema("Salvando lista no cache...");
+            try {
+                const db = await openDB();
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                const data = {
+                    canais: canais,
+                    categorias: categoriasList,
+                    nome: document.getElementById('playlistNameDisplay').innerText
+                };
+                store.put(data, "iptv_data");
+                tx.oncomplete = () => { 
+                    logSistema("Cache salvo com sucesso!"); 
+                    alert("Progresso salvo no Cache! Você pode fechar o navegador e continuar depois.");
+                };
+            } catch (err) {
+                console.error(err);
+                logSistema("Erro ao salvar cache.");
+            }
+        }
+
+        async function carregarCacheDB(isAutoLoad = false) {
+            try {
+                const db = await openDB();
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                const request = store.get("iptv_data");
+                request.onsuccess = () => {
+                    if (request.result && request.result.canais && request.result.canais.length > 0) {
+                        canais = request.result.canais;
+                        categoriasList = request.result.categorias || [];
+                        document.getElementById('playlistNameDisplay').innerText = request.result.nome || "Lista Em Cache";
+                        categoriaAtiva = "TODOS";
+                        renderizarAbasCategorias();
+                        renderizarLista();
+                        atualizarBotaoBatchState();
+                        atualizarContadorSwapVisual();
+                        if(!isAutoLoad) {
+                            logSistema("Cache carregado com sucesso!");
+                            fecharPainel();
+                        }
+                    } else {
+                        if(!isAutoLoad) logSistema("Nenhum cache encontrado.");
+                    }
+                };
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function limparCacheDBTotal() {
+            try {
+                const db = await openDB();
+                const tx = db.transaction(storeName, "readwrite");
+                const store = tx.objectStore(storeName);
+                store.delete("iptv_data");
+                tx.oncomplete = () => { 
+                    logSistema("Cache do sistema removido."); 
+                    alert("Cache apagado com sucesso.");
+                };
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // Tenta carregar o cache salvo assim que o aplicativo inicia
+        window.addEventListener('DOMContentLoaded', () => {
+            carregarCacheDB(true);
+        });
     </script>
 </body>
 </html>
