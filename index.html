@@ -309,7 +309,7 @@
                 <div class="form-group">
                     <label>URL Base do GitHub (Raw / Pasta de Logos)</label>
                     <input type="text" id="autoLogoBaseUrl" placeholder="Ex: https://raw.githubusercontent.com/usuario/repo/main/logos/">
-                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testará automaticamente variações inteligentes (maiúsculas, minúsculas, espaços e nomes juntos) com extensões .png, .jpg e .webp. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado.</div>
+                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testa automaticamente variações inteligentes (nomes exatos, maiúsculas, minúsculas, espaços codificados e arquivos unidos) com extensões .png, .jpg e .webp. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado.</div>
                 </div>
                 <div class="form-group">
                     <label>Escopo do Scan</label>
@@ -1272,7 +1272,7 @@
             renderizarLista();
         }
 
-        // --- SISTEMA DE AUTO-LOGO SCAN INTELIGENTE (COM REGRA DE OURO) ---
+        // --- SISTEMA DE AUTO-LOGO SCAN ULTRA-EFICIENTE (COM SUPORTE A ESPAÇOS, CASE E ACENTOS) ---
         function abrirModalAutoLogo() {
             document.getElementById('modalAutoLogo').style.display = 'flex';
         }
@@ -1283,53 +1283,44 @@
 
         function gerarCandidatosLogo(titulo) {
             if (!titulo) return [];
-            let limpo = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
             let candidatos = new Set();
             
-            // 1. Minúsculas com hífen (ex: rede-premium-tv)
+            // 1. Nome exato e codificado URL (preservando espaços e letras maiúsculas/minúsculas)
+            ['.png', '.jpg', '.webp'].forEach(ext => {
+                candidatos.add(titulo + ext);
+                candidatos.add(encodeURIComponent(titulo) + ext);
+            });
+
+            // 2. Sem espaços, mantendo o case original (ex: "Tv Max" -> "TvMax.png")
+            let semEspacosOrig = titulo.replace(/\s+/g, "");
+            ['.png', '.jpg', '.webp'].forEach(ext => {
+                candidatos.add(semEspacosOrig + ext);
+                candidatos.add(encodeURIComponent(semEspacosOrig) + ext);
+            });
+
+            // 3. Normalizado sem acentos (ex: "Tvitapê" -> "Tvitape")
+            let limpo = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            let semEspacosLimpo = limpo.replace(/\s+/g, "");
+            ['.png', '.jpg', '.webp'].forEach(ext => {
+                candidatos.add(limpo + ext);
+                candidatos.add(encodeURIComponent(limpo) + ext);
+                candidatos.add(limpo.toLowerCase() + ext);
+                candidatos.add(semEspacosLimpo + ext);
+                candidatos.add(semEspacosLimpo.toLowerCase() + ext);
+            });
+
+            // 4. Variações com hífen e underline (minúsculas e originais)
             let hLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-            if (hLower) {
-                candidatos.add(hLower + '.png');
-                candidatos.add(hLower + '.jpg');
-                candidatos.add(hLower + '.webp');
-            }
-            
-            // 2. Minúsculas com underline (ex: rede_premium_tv)
-            let uLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
-            if (uLower) {
-                candidatos.add(uLower + '.png');
-                candidatos.add(uLower + '.jpg');
-                candidatos.add(uLower + '.webp');
-            }
-            
-            // 3. Tudo junto minúsculas (ex: redepremiumtv)
-            let jLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "");
-            if (jLower) {
-                candidatos.add(jLower + '.png');
-                candidatos.add(jLower + '.jpg');
-                candidatos.add(jLower + '.webp');
-            }
-            
-            // 4. Case original com hífen
             let hOrig = limpo.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-            if (hOrig) {
-                candidatos.add(hOrig + '.png');
-                candidatos.add(hOrig + '.jpg');
-                candidatos.add(hOrig + '.webp');
-            }
-            
-            // 5. Case original tudo junto
-            let jOrig = limpo.replace(/[^a-zA-Z0-9]/g, "");
-            if (jOrig) {
-                candidatos.add(jOrig + '.png');
-                candidatos.add(jOrig + '.jpg');
-                candidatos.add(jOrig + '.webp');
-            }
-            
-            // 6. Título codificado exato
-            candidatos.add(encodeURIComponent(titulo) + '.png');
-            candidatos.add(encodeURIComponent(titulo) + '.jpg');
-            candidatos.add(encodeURIComponent(titulo) + '.webp');
+            let uLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
+            let uOrig = limpo.replace(/[^a-zA-Z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
+
+            ['.png', '.jpg', '.webp'].forEach(ext => {
+                candidatos.add(hLower + ext);
+                candidatos.add(hOrig + ext);
+                candidatos.add(uLower + ext);
+                candidatos.add(uOrig + ext);
+            });
 
             return Array.from(candidatos);
         }
@@ -1377,7 +1368,7 @@
                 let canal = alvos[i];
                 consoleBox.innerText = `Testando (${i+1}/${alvos.length}): ${canal.title}...`;
                 
-                let candidatos = gerarCandidatosLogo(canal.title);
+                let candidatos = gerarcandidatosLogo = gerarCandidatosLogo(canal.title);
                 let logoEncontrada = null;
 
                 for (let candidato of candidatos) {
@@ -1490,7 +1481,6 @@
             }
         }
 
-        // Tenta carregar o cache salvo assim que o aplicativo inicia
         window.addEventListener('DOMContentLoaded', () => {
             carregarCacheDB(true);
         });
