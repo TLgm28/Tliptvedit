@@ -307,9 +307,9 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label>URL Base do GitHub (Raw / Pasta de Logos)</label>
-                    <input type="text" id="autoLogoBaseUrl" placeholder="Ex: https://raw.githubusercontent.com/usuario/repo/main/logos/">
-                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testa automaticamente variações inteligentes (nomes exatos, maiúsculas, minúsculas, espaços codificados e arquivos unidos) com extensões .png, .jpg e .webp. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado.</div>
+                    <label>URL Base do GitHub (Pode ser o link normal ou RAW)</label>
+                    <input type="text" id="autoLogoBaseUrl" placeholder="Ex: https://github.com/TLgm28/Tliptvlogo/tree/main/logos">
+                    <div style="font-size:10px; color:var(--text-muted); margin-top:3px;">O sistema testará o nome do canal limpo + .png / .jpg. <b>Regra de Ouro:</b> Se o logo não for encontrado na biblioteca, o canal atual não será alterado (nem apagado).</div>
                 </div>
                 <div class="form-group">
                     <label>Escopo do Scan</label>
@@ -1272,7 +1272,7 @@
             renderizarLista();
         }
 
-        // --- SISTEMA DE AUTO-LOGO SCAN ULTRA-EFICIENTE (COM SUPORTE A ESPAÇOS, CASE E ACENTOS) ---
+        // --- SISTEMA DE AUTO-LOGO SCAN ---
         function abrirModalAutoLogo() {
             document.getElementById('modalAutoLogo').style.display = 'flex';
         }
@@ -1281,63 +1281,13 @@
             document.getElementById('modalAutoLogo').style.display = 'none';
         }
 
-        // NOVA FUNÇÃO: Faz o parse inteligente para extrair dados se o link for do GitHub
-        function parseGithubInfo(url) {
-            let ghRegex = /(?:github\.com\/([^\/]+)\/([^\/]+)\/(?:tree|blob)\/([^\/]+)\/(.*))|(?:raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.*))/;
-            let match = url.trim().match(ghRegex);
-            if (match) {
-                if (match[1]) return { user: match[1], repo: match[2], branch: match[3], path: match[4] || '' };
-                else return { user: match[5], repo: match[6], branch: match[7], path: match[8] || '' };
-            }
-            return null;
-        }
-
-        function gerarCandidatosLogo(titulo) {
-            if (!titulo) return [];
-            let candidatos = new Set();
-            
-            let limpo = titulo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            let semEspacosOrig = titulo.replace(/\s+/g, "");
-            let semEspacosLimpo = limpo.replace(/\s+/g, "");
-            
-            const addExts = (nome) => {
-                ['.png', '.jpg', '.webp'].forEach(ext => {
-                    candidatos.add(nome + ext);
-                    candidatos.add(encodeURIComponent(nome) + ext);
-                });
-            };
-
-            // 1. Exato e Case original
-            addExts(titulo);
-
-            // 2. Title Case (ex: "TV Itape" vira "Tv Itape") e Primeira Maiúscula
-            let titleCase = titulo.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-            let firstCap = titulo.charAt(0).toUpperCase() + titulo.slice(1).toLowerCase();
-            addExts(titleCase);
-            addExts(firstCap);
-
-            // 3. Sem espaços originais
-            addExts(semEspacosOrig);
-            addExts(titleCase.replace(/\s+/g, ""));
-
-            // 4. Limpo (sem acento algum)
-            addExts(limpo);
-            addExts(limpo.toLowerCase());
-            addExts(semEspacosLimpo);
-            addExts(semEspacosLimpo.toLowerCase());
-            
-            // 5. Title Case Limpo (sem acento mas com primeiras letras maiúsculas)
-            let titleCaseLimpo = limpo.toLowerCase().replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-            addExts(titleCaseLimpo);
-            addExts(titleCaseLimpo.replace(/\s+/g, ""));
-
-            // 6. Variações com hífen e underline para o nome limpo
-            let hLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
-            let uLower = limpo.toLowerCase().replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_*|_*$/g, "");
-            addExts(hLower);
-            addExts(uLower);
-
-            return Array.from(candidatos);
+        function normalizarNomeParaLogo(nome) {
+            return nome
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9]/g, "-")
+                .replace(/-+/g, "-")
+                .replace(/^-|-$/g, "");
         }
 
         function testarImagemExiste(url) {
@@ -1356,10 +1306,19 @@
                 return;
             }
 
+            // Conversão inteligente do link do GitHub para formato RAW
+            if (baseUrl.includes("github.com") && !baseUrl.includes("raw.githubusercontent.com")) {
+                baseUrl = baseUrl.replace("github.com", "raw.githubusercontent.com");
+                baseUrl = baseUrl.replace("/tree/", "/");
+                baseUrl = baseUrl.replace("/blob/", "/");
+            }
+
+            if (!baseUrl.endsWith('/')) baseUrl += '/';
+
             const escopo = document.getElementById('autoLogoEscopo').value;
             const consoleBox = document.getElementById('autoLogoConsole');
             consoleBox.style.display = 'block';
-            consoleBox.innerText = "Iniciando varredura inteligente de logos...";
+            consoleBox.innerText = "Iniciando varredura de logos...\nUsando base: " + baseUrl;
 
             let alvos = [];
             if (escopo === 'todos') {
@@ -1378,76 +1337,29 @@
             let encontrados = 0;
             let ignorados = 0;
 
-            // ADIÇÃO CIRÚRGICA: INTEGRAÇÃO API GITHUB
-            // Isso previne fazer testes cegos caso a URL seja do Github. 
-            // Ele puxa a lista da pasta inteira, remove acentos, espaços e maiúsculas de TUDO e liga perfeitamente.
-            let githubFiles = [];
-            let githubMode = false;
-            const ghInfo = parseGithubInfo(baseUrl);
-            
-            if (ghInfo) {
-                consoleBox.innerText = "Consultando árvore do GitHub para mapeamento de precisão (ignora acentos, espaços e maiúsculas)...";
-                try {
-                    let apiPath = ghInfo.path.replace(/\/+$/, "");
-                    let apiUrl = `https://api.github.com/repos/${ghInfo.user}/${ghInfo.repo}/contents/${apiPath}?ref=${ghInfo.branch}`;
-                    let resp = await fetch(apiUrl);
-                    if (resp.ok) {
-                        let data = await resp.json();
-                        if (Array.isArray(data)) {
-                            githubFiles = data.filter(item => item.type === 'file' && item.name.match(/\.(png|jpg|jpeg|webp)$/i));
-                            githubMode = true;
-                            consoleBox.innerText = `Encontrados ${githubFiles.length} arquivos de logo no repositório. Processando canais...`;
-                        }
-                    }
-                } catch(e) {
-                    console.warn("Falha na API GitHub, usando modo de permutações (força bruta).", e);
-                }
-            }
-
-            if (!baseUrl.endsWith('/')) baseUrl += '/';
-
             for (let i = 0; i < alvos.length; i++) {
                 let canal = alvos[i];
                 consoleBox.innerText = `Testando (${i+1}/${alvos.length}): ${canal.title}...`;
                 
+                let nomeClean = normalizarNomeParaLogo(canal.title);
+                let urlTeste1 = baseUrl + nomeClean + '.png';
+                let urlTeste2 = baseUrl + nomeClean + '.jpg';
+                let urlTeste3 = baseUrl + encodeURIComponent(canal.title) + '.png';
+
                 let logoEncontrada = null;
 
-                // 1. TENTATIVA INTELIGENTE VIA GITHUB (Se aplicável)
-                if (githubMode) {
-                    // Normaliza canal: tudo minúsculo, sem nenhum espaço, sem nenhum acento e sem caracteres especiais
-                    let canalNorm = canal.title.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-                    
-                    let matchInfo = githubFiles.find(f => {
-                        // Faz o mesmo para o nome do arquivo que está hospedado
-                        let fNameNorm = f.name.replace(/\.[^/.]+$/, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-                        return fNameNorm === canalNorm;
-                    });
-
-                    if (matchInfo) {
-                        // Se bateu exatamente na normalização (Ex: 'TV Itape' == 'Tvitapê'), remonta a raw URL original correta.
-                        let rawPath = ghInfo.path.replace(/\/+$/, "");
-                        if(rawPath) rawPath += "/";
-                        logoEncontrada = `https://raw.githubusercontent.com/${ghInfo.user}/${ghInfo.repo}/${ghInfo.branch}/${rawPath}${encodeURIComponent(matchInfo.name)}`;
-                    }
-                }
-
-                // 2. FALLBACK (Caso não seja GitHub ou a API tenha falhado)
-                if (!logoEncontrada) {
-                    let candidatos = gerarCandidatosLogo(canal.title);
-                    for (let candidato of candidatos) {
-                        let testUrl = baseUrl + candidato;
-                        if (await testarImagemExiste(testUrl)) {
-                            logoEncontrada = testUrl;
-                            break;
-                        }
-                    }
+                if (await testarImagemExiste(urlTeste1)) {
+                    logoEncontrada = urlTeste1;
+                } else if (await testarImagemExiste(urlTeste2)) {
+                    logoEncontrada = urlTeste2;
+                } else if (await testarImagemExiste(urlTeste3)) {
+                    logoEncontrada = urlTeste3;
                 }
 
                 if (logoEncontrada) {
                     canal.logo = logoEncontrada;
                     encontrados++;
                 } else {
-                    // REGRA DE OURO: Mantém intacto se não encontrar
                     ignorados++;
                 }
             }
@@ -1457,21 +1369,27 @@
             alert(`Auto-Logo concluído!\nAdicionadas/Atualizadas: ${encontrados}\nIgnoradas (mantidas intactas): ${ignorados}`);
         }
 
-        // --- SISTEMA DE CACHE CIRÚRGICO (INDEXEDDB PARA LISTAS GRANDES) ---
+        // --- SISTEMA DE CACHE HÍBRIDO (INDEXEDDB + LOCALSTORAGE FALLBACK) ---
         const dbName = "IPTVEditorDB";
         const storeName = "cacheStore";
 
         function openDB() {
             return new Promise((resolve, reject) => {
-                const request = indexedDB.open(dbName, 1);
-                request.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains(storeName)) {
-                        db.createObjectStore(storeName);
-                    }
-                };
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
+                if (!window.indexedDB) {
+                    reject("IndexedDB não suportado");
+                    return;
+                }
+                try {
+                    const request = window.indexedDB.open(dbName, 1);
+                    request.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(storeName)) {
+                            db.createObjectStore(storeName);
+                        }
+                    };
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                } catch(e) { reject(e); }
             });
         }
 
@@ -1481,23 +1399,31 @@
                 return;
             }
             logSistema("Salvando lista no cache...");
+            
+            const data = {
+                canais: canais,
+                categorias: categoriasList,
+                nome: document.getElementById('playlistNameDisplay').innerText
+            };
+
             try {
                 const db = await openDB();
                 const tx = db.transaction(storeName, "readwrite");
                 const store = tx.objectStore(storeName);
-                const data = {
-                    canais: canais,
-                    categorias: categoriasList,
-                    nome: document.getElementById('playlistNameDisplay').innerText
-                };
                 store.put(data, "iptv_data");
                 tx.oncomplete = () => { 
-                    logSistema("Cache salvo com sucesso!"); 
+                    logSistema("Cache salvo com sucesso (IndexedDB)!"); 
                     alert("Progresso salvo no Cache! Você pode fechar o navegador e continuar depois.");
                 };
             } catch (err) {
-                console.error(err);
-                logSistema("Erro ao salvar cache.");
+                // FALLBACK: O IDM+ costuma bloquear o IndexedDB em páginas locais. Entra o LocalStorage de resgate.
+                try {
+                    localStorage.setItem("iptv_data_fallback", JSON.stringify(data));
+                    logSistema("Cache salvo via LocalStorage (Modo Compatibilidade)."); 
+                    alert("Salvo com sucesso (Modo de Compatibilidade Ativado para o seu navegador)!");
+                } catch(e) {
+                    alert("Erro crítico: Seu navegador bloqueou todos os métodos de salvamento local.");
+                }
             }
         }
 
@@ -1509,42 +1435,64 @@
                 const request = store.get("iptv_data");
                 request.onsuccess = () => {
                     if (request.result && request.result.canais && request.result.canais.length > 0) {
-                        canais = request.result.canais;
-                        categoriasList = request.result.categorias || [];
-                        document.getElementById('playlistNameDisplay').innerText = request.result.nome || "Lista Em Cache";
-                        categoriaAtiva = "TODOS";
-                        renderizarAbasCategorias();
-                        renderizarLista();
-                        atualizarBotaoBatchState();
-                        atualizarContadorSwapVisual();
-                        if(!isAutoLoad) {
-                            logSistema("Cache carregado com sucesso!");
-                            fecharPainel();
-                        }
+                        aplicarDadosCache(request.result, isAutoLoad);
                     } else {
-                        if(!isAutoLoad) logSistema("Nenhum cache encontrado.");
+                        tentarCarregarLocalStorage(isAutoLoad);
                     }
                 };
+                request.onerror = () => tentarCarregarLocalStorage(isAutoLoad);
             } catch (err) {
-                console.error(err);
+                tentarCarregarLocalStorage(isAutoLoad);
+            }
+        }
+
+        function tentarCarregarLocalStorage(isAutoLoad) {
+            try {
+                const dadosStr = localStorage.getItem("iptv_data_fallback");
+                if (dadosStr) {
+                    const dados = JSON.parse(dadosStr);
+                    aplicarDadosCache(dados, isAutoLoad);
+                } else {
+                    if(!isAutoLoad) logSistema("Nenhum cache encontrado.");
+                }
+            } catch(e) {
+                if(!isAutoLoad) logSistema("Erro ao ler cache.");
+            }
+        }
+
+        function aplicarDadosCache(dados, isAutoLoad) {
+            canais = dados.canais;
+            categoriasList = dados.categorias || [];
+            document.getElementById('playlistNameDisplay').innerText = dados.nome || "Lista Em Cache";
+            categoriaAtiva = "TODOS";
+            renderizarAbasCategorias();
+            renderizarLista();
+            atualizarBotaoBatchState();
+            atualizarContadorSwapVisual();
+            if(!isAutoLoad) {
+                logSistema("Cache carregado com sucesso!");
+                fecharPainel();
             }
         }
 
         async function limparCacheDBTotal() {
             try {
+                localStorage.removeItem("iptv_data_fallback");
                 const db = await openDB();
                 const tx = db.transaction(storeName, "readwrite");
                 const store = tx.objectStore(storeName);
                 store.delete("iptv_data");
                 tx.oncomplete = () => { 
-                    logSistema("Cache do sistema removido."); 
+                    logSistema("Cache total removido."); 
                     alert("Cache apagado com sucesso.");
                 };
             } catch (err) {
-                console.error(err);
+                logSistema("Cache apagado (Modo Compatibilidade)."); 
+                alert("Cache apagado com sucesso.");
             }
         }
 
+        // Tenta carregar o cache salvo assim que o aplicativo inicia
         window.addEventListener('DOMContentLoaded', () => {
             carregarCacheDB(true);
         });
